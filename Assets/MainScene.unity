@@ -789,6 +789,17 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &515233377 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1736487740197360, guid: a48ebbb5cda585e43b33b40c773d6e43,
+    type: 2}
+  m_PrefabInternal: {fileID: 383703460}
+--- !u!114 &515233381 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+    type: 2}
+  m_PrefabInternal: {fileID: 383703460}
+  m_Script: {fileID: 11500000, guid: 1430a8054305d431497bccfb5797966c, type: 3}
 --- !u!1 &534941062
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,7 +952,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 515233381}
         m_MethodName: ReturnToTitleMenu
         m_Mode: 1
         m_Arguments:
@@ -1170,6 +1181,7 @@ GameObject:
   - component: {fileID: 962043249}
   - component: {fileID: 962043251}
   - component: {fileID: 962043250}
+  - component: {fileID: 962043252}
   m_Layer: 5
   m_Name: 'Debug: Right'
   m_TagString: Untagged
@@ -1234,6 +1246,58 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 962043248}
+--- !u!114 &962043252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 962043248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 962043250}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 515233377}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &991749849
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,7 +1608,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 515233381}
         m_MethodName: OnDebugClick
         m_Mode: 2
         m_Arguments:
@@ -2029,7 +2093,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+          type: 2}
         m_MethodName: OnDebugClick
         m_Mode: 2
         m_Arguments:
@@ -2230,7 +2295,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 515233381}
         m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
@@ -2602,8 +2667,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Reset
+      - m_Target: {fileID: 515233381}
+        m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
