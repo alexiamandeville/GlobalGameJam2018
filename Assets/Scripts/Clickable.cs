@@ -40,7 +40,7 @@ public class Clickable : MonoBehaviour {
                 //Tell the body that the current Tool has touched it
                 BodyController.BodyPart part = BodyController.GetBodyPart(name);
                 bod.applyCure(toolBox.selectedTool, part);
-                sound.playBodyEffect(toolBox.selectedTool, part);
+                sound.playBodyEffect(toolBox.selectedTool, false);
                 break;
             case "Tool":
                 toolBox.selectTool(name);
