@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class Clickable : MonoBehaviour {
-    public SoundController sound;
+    SoundController sound;
 
     // Use this for initialization
     BodyController bod;
@@ -44,6 +44,10 @@ public class Clickable : MonoBehaviour {
                 break;
             case "Tool":
                 toolBox.selectTool(name);
+                if (toolBox.selectedTool != ToolBox.Tool.None)
+                {
+                    sound.playToolPickupEffect(toolBox.selectedTool);
+                }
                 break;
             case "Background":
                 toolBox.selectTool("None");
