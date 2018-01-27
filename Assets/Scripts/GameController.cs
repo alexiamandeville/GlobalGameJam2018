@@ -93,10 +93,6 @@ public class GameController : MonoBehaviour {
         GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
         //TODO: Initialize Body Controller	
         body = gameController.GetComponent(typeof(BodyController)) as BodyController;
-        // Setup UI
-        healthText = GameObject.Find("HealthText").GetComponent<Text>();
-        timeText = GameObject.Find("TimeText").GetComponent<Text>();
-
     }
     // Update is called once per frame
     void Update()
