@@ -97,13 +97,13 @@ public class BodyController : MonoBehaviour {
 		symptoms.Sort((a, b)=> 1 - 2 * Random.Range(0, 1));
 
 		// 3 - 5 symptoms. Keep trying to assign to a symptom-free body part
-		int targetSymptomCount = Random.Range( 3, 5 );
+		int targetSymptomCount = Random.Range( 3, 6 );
 
 		// Shitty performance / approach
 		while( targetSymptomCount > 0 )
 		{
 			// Pick random body part. If it's not yet assigned, assign it now
-			int bodyPartIndex = Random.Range ( 0, bodyPartCount - 1 );
+			int bodyPartIndex = Random.Range ( 0, bodyPartCount );
 			if (bodyPartSymptoms [bodyPartIndex] == Symptom.None) {
 
 				// Assign a random and unique symptom
