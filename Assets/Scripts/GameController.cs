@@ -76,9 +76,8 @@ public class GameController : MonoBehaviour {
 		// Initial values to restart game
 		startingTime = Time.time;
 		heartCount = kHeartCount;
-
 		// Reset body as well
-		BodyController bodyController = GameObject.Find("Body").GetComponent<BodyController>();
+		BodyController bodyController = BodyController.GetInstance();
 		bodyController.Reset ();
 	}
 

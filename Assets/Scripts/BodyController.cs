@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEditor;
 
 
-public class BodyController : MonoBehaviour {
+public class BodyController{
+  
 
 	/*** Symptoms ***/
 
@@ -20,27 +21,71 @@ public class BodyController : MonoBehaviour {
 		SkinRashes
 	};
 
-	// Six body parts, listed as 0-indexed enum for easier setting
-	enum BodyPart {
+    public enum BodyPart
+    {
+        Head = 0,
+        LeftArm,
+        RightArm,
+        LeftLeg,
+        RightLeg,
+        Groin,
+        Chest,
+        None
+    };
 
-		Head = 0,
-		LeftArm,
-		RightArm,
-		LeftLeg,
-		RightLeg,
-		Groin
-	};
-
-	// Parallel array that maps BodyPart to the body part GameObjects
-	GameObject[] bodyPartObjects;
+    // Parallel array that maps BodyPart to the body part GameObjects
+    GameObject[] bodyPartObjects;
 
 	// List of current symptoms on the body
 	Symptom[] bodyPartSymptoms;
 
-	/*** Unity Functions ***/
+    static BodyController singleton = null;
 
-	// Use this for initialization
-	void Start () {
+    public static  BodyController GetInstance()
+    {
+        if (singleton == null)
+            singleton = new BodyController();
+        return singleton;
+    }
+
+    public static BodyPart GetBodyPart (string name)
+    {
+        BodyPart part = BodyPart.None;
+        switch (name)
+        {
+            case "Head":
+                part = BodyPart.Head;
+                break;
+            case "Left Arm":
+                part = BodyPart.LeftArm;
+                break;
+            case "Right Arm":
+                part = BodyPart.RightArm;
+                break;
+            case "Left Leg":
+                part = BodyPart.LeftLeg;
+                break;
+            case "Right Leg":
+                part = BodyPart.RightLeg;
+                break;
+            case "Groin":
+                part = BodyPart.Groin;
+                break;
+            case "Chest":
+                part = BodyPart.Chest;
+                break;
+            default:
+                part = BodyPart.None;
+                break;
+                
+        }
+
+        return part;
+    }
+
+
+    // Use this for initialization
+    void Start () {
 
 		Reset ();
 
@@ -53,6 +98,11 @@ public class BodyController : MonoBehaviour {
 		SetupVisuals();
 	}
 	
+    public void applyCure(ToolBox.Tool tool, BodyPart part)
+    {
+        Debug.Log("Applying cure with tool: " + tool + "To part: " + part);
+        //Stub for now.
+    }
 	// Update is called once per frame
 	void Update () {
 	}
@@ -122,17 +172,17 @@ public class BodyController : MonoBehaviour {
 
 	void SetupVisuals()
 	{
-		// First, grab all body parts
+		// First, grab all body parts 
 		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
 		bodyPartObjects = new GameObject[ bodyPartCount ];
 
 		// Todo: not be hardcoded
-		bodyPartObjects[ 0 ] = transform.Find( "Head" ).gameObject;
-		bodyPartObjects[ 1 ] = transform.Find( "Left Arm" ).gameObject;
-		bodyPartObjects[ 2 ] = transform.Find( "Right Arm" ).gameObject;
-		bodyPartObjects[ 3 ] = transform.Find( "Left Leg" ).gameObject;
-		bodyPartObjects[ 4 ] = transform.Find( "Right Leg" ).gameObject;
-		bodyPartObjects[ 5 ] = transform.Find( "Groin" ).gameObject;
+		bodyPartObjects[ 0 ] = GameObject.Find( "Head" );
+		bodyPartObjects[ 1 ] = GameObject.Find( "Left Arm" );
+		bodyPartObjects[ 2 ] = GameObject.Find( "Right Arm" );
+		bodyPartObjects[ 3 ] = GameObject.Find( "Left Leg" );
+		bodyPartObjects[ 4 ] = GameObject.Find( "Right Leg" );
+		bodyPartObjects[ 5 ] = GameObject.Find( "Groin" );
 
 		// For each diseasd body part, slap it on visually
 		Material redMaterial = AssetDatabase.LoadAssetAtPath("Assets/RedMaterial.mat", typeof(Material)) as Material;
