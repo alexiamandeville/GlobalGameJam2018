@@ -3,19 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class Heartbeat : MonoBehaviour {
-
-    private static Heartbeat HeartInstance;
-
-    public static Heartbeat GetHeartInstance()
-    {
-        if(HeartInstance == null)
-        {
-            HeartInstance = new Heartbeat();
-        }
-
-        return HeartInstance;
-    }
-
+ 
     [SerializeField]
     private AudioSource HeartBeatAudioSource;
     [SerializeField]
