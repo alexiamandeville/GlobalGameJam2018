@@ -100,9 +100,21 @@ public class BodyController{
 	
     public void applyCure(ToolBox.Tool tool, BodyPart part)
     {
+		// We have a TOOL, a BODY part, and a SYMPTOM on this body part..
+		Symptom symptom = bodyPartSymptoms[ (int)part ];
+
+		// How many of each symptom do we have?
+		int bloodSpurtCount = CountSymptom( Symptom.BloodSpurts );
+		int painCount = CountSymptom( Symptom.Pain );
+		int heartbeatCount = CountSymptom( Symptom.Heartbeat );
+		int skinRashesCount = CountSymptom( Symptom.SkinRashes );
+
+		// We now have to apply a set of rules:
+
         Debug.Log("Applying cure with tool: " + tool + "To part: " + part);
         //Stub for now.
     }
+
 	// Update is called once per frame
 	void Update () {
 	}
@@ -131,6 +143,21 @@ public class BodyController{
 
 
 	/*** Symptoms Setup ***/
+
+	// Helper function: returns the number of body parts that have the given symptom
+	int CountSymptom( Symptom symptom )
+	{
+		// I'm sure there is a lambda way of doing this
+		int count = 0;
+
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
+		for (int i = 0; i < bodyPartCount; i++) {
+			if (bodyPartSymptoms [i] == symptom)
+				count++;
+		}
+
+		return count;
+	}
 
 	void SetupSymptoms()
 	{
