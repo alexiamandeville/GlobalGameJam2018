@@ -11,6 +11,8 @@ TagManager:
   - Left Leg
   - Right Leg
   - Groin
+  - Tool
+  - Drug
   layers:
   - Default
   - TransparentFX
