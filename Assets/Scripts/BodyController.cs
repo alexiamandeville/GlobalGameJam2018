@@ -50,7 +50,7 @@ public class BodyController : MonoBehaviour
 
     // Body has heartbeat and an overall color
     int heartbeat = 80;
-    public BodyPartColor bodyColor = BodyPartColor.Normal;
+    BodyPartColor bodyColor = BodyPartColor.Normal;
 
     // List of all body parts, their symptoms, and color
     // This array is indexed via BodyPartType
@@ -183,15 +183,18 @@ public class BodyController : MonoBehaviour
             bodyParts[i].symptom = Symptom.None;
         }
 
-        // List of symptoms we randomly shuffle: we will apply these
+        // List rof symptoms we randomly shuffle: we will apply these
         int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
         List<Symptom> symptoms = new List<Symptom>();
         for (int i = 0; i < kSymptomCount; i++)
             symptoms.Add((Symptom)i);
         symptoms.Sort((a, b) => 1 - 2 * Random.Range(0, 1));
 
-        // 3 - 5 symptoms. Keep trying to assign to a symptom-free body part
-        int targetSymptomCount = Random.Range(3, 6);
+		// Always do three symptoms, and track once the leg or arm has been
+		// set so we don't re-apply it to the opposite leg / arm
+        int targetSymptomCount = 3;
+		bool armsApplied = false;
+		bool legsApplied = false;
 
         // Shitty performance / approach
         while (targetSymptomCount > 0)
@@ -200,11 +203,23 @@ public class BodyController : MonoBehaviour
             int bodyPartIndex = Random.Range(0, bodyPartCount);
             if (bodyParts[bodyPartIndex].symptom == Symptom.None)
             {
+				// Don't double apply..
+				if (armsApplied && (bodyPartIndex == (int)BodyPartType.LeftArm || bodyPartIndex == (int)BodyPartType.RightArm))
+					continue;
+
+				if (legsApplied && (bodyPartIndex == (int)BodyPartType.LeftLeg || bodyPartIndex == (int)BodyPartType.RightLeg))
+					continue;
 
                 // Assign a random and unique symptom
                 bodyParts[bodyPartIndex].symptom = symptoms[0];
                 symptoms.RemoveAt(0);
                 targetSymptomCount--;
+
+				if ( bodyPartIndex == (int)BodyPartType.LeftArm || bodyPartIndex == (int)BodyPartType.RightArm )
+					armsApplied = true;
+
+				if ( bodyPartIndex == (int)BodyPartType.LeftLeg || bodyPartIndex == (int)BodyPartType.RightLeg )
+					legsApplied = true;
             }
         }
 
@@ -217,7 +232,6 @@ public class BodyController : MonoBehaviour
 
     void SetupVisuals()
     {
-
         // For each type of color, initialize colors
         int bodyPartColorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
         bodyPartColorMaterials = new Material[bodyPartColorCount];
@@ -228,33 +242,9 @@ public class BodyController : MonoBehaviour
         bodyPartColorMaterials[3] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/BlueSkin.mat", typeof(Material)) as Material;
         bodyPartColorMaterials[4] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/WhiteSkin.mat", typeof(Material)) as Material;
 
-
-
-        // For each body part, apply the appropriate color
-        foreach (Transform child in transform)
-        {
-            child.gameObject.GetComponent<Renderer>().material = bodyPartColorMaterials[(int)bodyColor];
-            // For each diseasd body part, slap it on visually
-            Material redMaterial = AssetDatabase.LoadAssetAtPath("Assets/RedMaterial.mat", typeof(Material)) as Material;
-            Material newMaterial = AssetDatabase.LoadAssetAtPath("Assets/New Material.mat", typeof(Material)) as Material;
-            for (int i = 0; i < bodyPartObjects.Length; i++)
-            {
-
-                // Skip the last two: Chest and None
-                if (bodyPartObjects[i] == null)
-                    continue;
-
-                Symptom symptom = bodyParts[i].symptom;
-                if (symptom != Symptom.None)
-                {
-                    bodyPartObjects[i].GetComponent<Renderer>().material = redMaterial;
-                }
-                else
-                {
-                    bodyPartObjects[i].GetComponent<Renderer>().material = newMaterial;
-                }
-
-            }
-        }
+		// For each body part, apply the appropriate color
+		foreach (GameObject child in bodyPartObjects) {
+			child.GetComponent<Renderer> ().material = bodyPartColorMaterials [(int)bodyColor];
+		}
     }
 }
