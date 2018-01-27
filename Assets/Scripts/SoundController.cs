@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class SoundController : MonoBehaviour {
 
     AudioSource source;   
-    AudioSource music;
+    AudioSource musicSource;
 
     public AudioClip[] toolPickup;
     public AudioClip[] injectorApply;
@@ -23,12 +23,14 @@ public class SoundController : MonoBehaviour {
 
     public bool muteEffects = false;
     public bool muteMusic = false;
+    public bool musicPlaying = false;
 
     public enum Music
     {
         StartScreen = 0,
         MainTheme,
-        DramaticTheme
+        WinningTheme,
+        LosingTheme
     }
 
     public enum Event
@@ -66,9 +68,18 @@ public class SoundController : MonoBehaviour {
         playEffect(eventClip[randomIndex]);
     }
 
-    public void playBGM(Music music )
+    public void playBGM(Music music)
     {
         Debug.Log("Plaing Background music " + music);
+        musicPlaying = true;
+        source.clip = bgm[(int)music];
+        source.Play();
+    }
+
+    public void stopBGM()
+    {
+        musicPlaying = false;
+        source.Stop();
     }
 
     public void playBodyEffect( ToolBox.Tool tool, bool correctTreatment)
@@ -103,6 +114,7 @@ public class SoundController : MonoBehaviour {
         source = camera.GetComponent(typeof(AudioSource)) as AudioSource;
 
         GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
-        music = gameController.GetComponent(typeof(AudioSource)) as AudioSource;
+        //musicSource = gameController.GetComponent(typeof(AudioSource)) as AudioSource;
+        playBGM(Music.StartScreen);
 	}
 }

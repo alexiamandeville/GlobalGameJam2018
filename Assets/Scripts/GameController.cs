@@ -96,6 +96,7 @@ public class GameController : MonoBehaviour {
         GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
         //TODO: Initialize Body Controller	
         body = gameController.GetComponent(typeof(BodyController)) as BodyController;
+        sound = gameController.GetComponent(typeof(SoundController)) as SoundController;
     }
     // Update is called once per frame
     void Update()
@@ -144,6 +145,7 @@ public class GameController : MonoBehaviour {
 
 	public void ResetGame()
 	{
+        sound.stopBGM();
         //Deactivate uneeded gameobjects and activate needed gameobjects
         isGameFinished = false;
         TitleScreen.SetActive(false);
@@ -165,12 +167,14 @@ public class GameController : MonoBehaviour {
     
     public void ReturnToTitleMenu()
     {
+        sound.playBGM(SoundController.Music.StartScreen);
         GameFinishedScreen.SetActive(false);
         TitleScreen.SetActive(true);
     }
 
     public IEnumerator GoToGameFinishedMenu()
     {
+        sound.playBGM(SoundController.Music.LosingTheme);
         isGameFinished = true;
         HeartScript.StopHeart();
         yield return new WaitForSeconds(2f);
