@@ -29,6 +29,8 @@ public class GameController : MonoBehaviour {
     [SerializeField]
 	private Text timeText;
 
+    [SerializeField]
+    private Heartbeat HeartScript;
 	/*** Game State ***/
 
 	// Game constants
@@ -156,6 +158,9 @@ public class GameController : MonoBehaviour {
 
 		SetupSymptoms ();
 
+        HeartScript.StartHeart();
+
+
 	}
     
     public void ReturnToTitleMenu()
@@ -167,6 +172,7 @@ public class GameController : MonoBehaviour {
     public IEnumerator GoToGameFinishedMenu()
     {
         isGameFinished = true;
+        HeartScript.StopHeart();
         yield return new WaitForSeconds(2f);
         MainGameObjs.SetActive(false);
         GameFinishedScreen.SetActive(true);

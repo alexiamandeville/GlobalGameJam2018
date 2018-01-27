@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class Heartbeat : MonoBehaviour {
-    [SerializeField]
-    private Text HeartBeatRate;
+ 
     [SerializeField]
     private AudioSource HeartBeatAudioSource;
+    [SerializeField]
+    private BodyController Body;
+    [SerializeField]
+    private GameController Controller;
 
     [Header("Heart beat sound pitch rates")]
     [Tooltip("1 is the default for normal audio speed, audio speed is a float")]
@@ -15,29 +18,18 @@ public class Heartbeat : MonoBehaviour {
     [SerializeField]
     private float FastHeartBeat = 1.5f;
     [SerializeField]
-    private float SlowHeartBeat = 0.5f;
+    private float SlowHeartBeat = 0.5f;	
 
-	// Use this for initialization
-	void Start () {
-        StartCoroutine(StartHeart());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    IEnumerator StartHeart()
+    public void StartHeart()
     {
+
         HeartBeat();
-        yield return new WaitForSeconds(17f);
-        StartCoroutine(StartHeart());
 
     }
-    public void HeartBeat()
+
+    private void HeartBeat()
     {
-        int HeartBeatRateValue;
-        int.TryParse(HeartBeatRate.text, out HeartBeatRateValue); 
+        int HeartBeatRateValue = Body.heartbeat;
         if (HeartBeatRateValue == 80)
         {
             HeartBeatAudioSource.pitch = NormalHeatBeat;
@@ -53,6 +45,11 @@ public class Heartbeat : MonoBehaviour {
             HeartBeatAudioSource.pitch = FastHeartBeat;
             HeartBeatAudioSource.Play();
         }
+    }
+
+    public void StopHeart()
+    {
+        HeartBeatAudioSource.Stop();
     }
 
 }

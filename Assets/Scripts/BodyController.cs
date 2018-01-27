@@ -49,7 +49,7 @@ public class BodyController : MonoBehaviour
     /*** Overall Body ***/
 
     // Body has heartbeat and an overall color
-    int heartbeat = 80;
+    public int heartbeat = 80;
     BodyPartColor bodyColor = BodyPartColor.Normal;
 
     // List of all body parts, their symptoms, and color
