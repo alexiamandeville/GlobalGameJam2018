@@ -16,7 +16,7 @@ public class SoundController : MonoBehaviour {
         Debug.Log("Plaing Background music " + music);
     }
 
-    public void playBodyEffect( ToolBox.Tool tool, BodyController.BodyPart part)
+    public void playBodyEffect( ToolBox.Tool tool, BodyPartType part)
     {
         Debug.Log("Playing sound effect for touching body part: " + part + " using tool: " + tool);
     }
