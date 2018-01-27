@@ -6,7 +6,7 @@ using UnityEngine;
 public class Clickable : MonoBehaviour {
 
     // Use this for initialization
-    BodyController bod;
+    BodyController bod = BodyController.GetInstance();
     ToolBox toolBox = ToolBox.GetInstance();
 
     //ToolBoxController tools;
@@ -30,7 +30,8 @@ public class Clickable : MonoBehaviour {
             //Body parts:
             case "Body":
                 //Tell the body that the current Tool has touched it
-
+                BodyController.BodyPart part = BodyController.GetBodyPart(name);
+                bod.applyCure(toolBox.selectedTool, part);
                 break;
             case "Tool":
                 toolBox.selectTool(name);

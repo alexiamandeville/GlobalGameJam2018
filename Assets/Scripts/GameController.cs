@@ -51,15 +51,7 @@ public class GameController : MonoBehaviour {
 	};
 
 	// Six body parts, listed as 0-indexed enum for easier setting
-	enum BodyPart {
 
-		Head = 0,
-		LeftArm,
-		RightArm,
-		LeftLeg,
-		RightLeg,
-		Groin
-	};
 
 	// List of current symptoms on the body
 	Symptom[] bodyPartSymptoms;
@@ -122,7 +114,7 @@ public class GameController : MonoBehaviour {
 
 	void SetupSymptoms()
 	{
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyController.BodyPart)).Length;
 		bodyPartSymptoms = new Symptom[ bodyPartCount ];
 		for( int i = 0; i < bodyPartCount; i++ )
 			bodyPartSymptoms[ i ] = Symptom.None;
@@ -152,7 +144,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		// Print out for debugging
-		foreach( BodyPart bodyPart in System.Enum.GetValues(typeof(BodyPart)) )
+		foreach( BodyController.BodyPart bodyPart in System.Enum.GetValues(typeof(BodyController.BodyPart)) )
 		{
 			Debug.Log ( "Body part " + bodyPart + " has symptom: " + bodyPartSymptoms[ (int)bodyPart ] );
 		}
