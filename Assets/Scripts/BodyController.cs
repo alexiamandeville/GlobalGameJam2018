@@ -55,10 +55,11 @@ public class BodyController : MonoBehaviour{
 	// This array is indexed via BodyPartType
 	BodyPart[] bodyParts;
 
-	// Parallel array that maps BodyPart to the body part GameObjects
+	// Parallel array that maps BodyPartType to the body part GameObjects
 	GameObject[] bodyPartObjects;
 
-	/*** Private ***/
+	// Parallel array that maps BodyPartColor to materials
+	Material[] bodyPartColorMaterials;
 
 	public static BodyPartType GetBodyPart (string name)
     {
@@ -92,6 +93,8 @@ public class BodyController : MonoBehaviour{
         return part;
     }
 
+
+	/*** Private ***/
 
     // Use this for initialization
     void Start () {
@@ -225,11 +228,20 @@ public class BodyController : MonoBehaviour{
 
 	void SetupVisuals()
 	{
+		// For each type of color, initialize colors
+		int bodyPartColorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
+		bodyPartColorMaterials = new Material[ bodyPartColorCount ];
+
+		bodyPartColorMaterials [0] = AssetDatabase.LoadAssetAtPath ("Assets/Meshes/Materials/NormalSkin.mat", typeof(Material)) as Material;
+		bodyPartColorMaterials [1] = AssetDatabase.LoadAssetAtPath ("Assets/Meshes/Materials/GreenSkin.mat", typeof(Material)) as Material;
+		bodyPartColorMaterials [2] = AssetDatabase.LoadAssetAtPath ("Assets/Meshes/Materials/RedSkin.mat", typeof(Material)) as Material;
+		bodyPartColorMaterials [3] = AssetDatabase.LoadAssetAtPath ("Assets/Meshes/Materials/BlueSkin.mat", typeof(Material)) as Material;
+		bodyPartColorMaterials [4] = AssetDatabase.LoadAssetAtPath ("Assets/Meshes/Materials/WhiteSkin.mat", typeof(Material)) as Material;
+
 		// First, grab all body parts 
 		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		bodyPartObjects = new GameObject[ bodyPartCount ];
 
-		// Todo: not be hardcoded! This matches the BodyPartType
 		bodyPartObjects[ 0 ] = GameObject.Find( "Head" );
 		bodyPartObjects[ 1 ] = GameObject.Find( "Left Arm" );
 		bodyPartObjects[ 2 ] = GameObject.Find( "Right Arm" );
@@ -237,21 +249,10 @@ public class BodyController : MonoBehaviour{
 		bodyPartObjects[ 4 ] = GameObject.Find( "Right Leg" );
 		bodyPartObjects[ 5 ] = GameObject.Find( "Groin" );
 
-		// For each diseasd body part, slap it on visually
-		Material redMaterial = AssetDatabase.LoadAssetAtPath("Assets/RedMaterial.mat", typeof(Material)) as Material;
-		Material newMaterial = AssetDatabase.LoadAssetAtPath("Assets/New Material.mat", typeof(Material)) as Material;
-		for (int i = 0; i < bodyPartCount; i++) {
-
-			// Skip the last two: Chest and None
-			if (bodyPartObjects [i] == null)
-				continue;
-
-			Symptom symptom = bodyParts [i].symptom;
-			if (symptom != Symptom.None) {
-				bodyPartObjects [i].GetComponent< Renderer > ().material = redMaterial;
-			} else {
-				bodyPartObjects [i].GetComponent< Renderer > ().material = newMaterial;
-			}
+		// For each body part, apply the appropriate color
+		foreach( Transform child in transform )
+		{
+			child.gameObject.GetComponent< Renderer >().material = bodyPartColorMaterials[ (int)bodyColor ];
 		}
 	}
 }
