@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // This is the high level state manager for the game. It controls the setup of the body,
 // the player's life counter, and win / end state.
 public class GameController : MonoBehaviour {
-
+    BodyController body;
 	/*** UI Labels ***/
 
 	Text healthText;
@@ -29,9 +29,11 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-		// Setup UI
-		healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
+        //TODO: Initialize Body Controller	
+        body = gameController.GetComponent(typeof(BodyController)) as BodyController;
+        // Setup UI
+        healthText = GameObject.Find("HealthText").GetComponent<Text>();
 		timeText = GameObject.Find("TimeText").GetComponent<Text>();
 
 		// Setup game state
@@ -77,8 +79,8 @@ public class GameController : MonoBehaviour {
 		startingTime = Time.time;
 		heartCount = kHeartCount;
 		// Reset body as well
-		BodyController bodyController = BodyController.GetInstance();
-		bodyController.Reset ();
+		
+		body.Reset ();
 	}
 
 }
