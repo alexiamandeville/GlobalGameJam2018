@@ -3,67 +3,93 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+/*** Body Enum Types ***/
+
+// List of possible symptoms. These can be anywhere, but only one per body part
+public enum Symptom
+{
+	None = 0, // All good: default state
+	BloodSpurts,
+	Pain,
+	Heartbeat,
+	SkinRashes
+};
+
+// Full list of body parts
+public enum BodyPartType
+{
+	Head = 0,
+	LeftArm,
+	RightArm,
+	LeftLeg,
+	RightLeg,
+	Groin,
+	Chest,
+	None
+};
+
+// Official colors
+public enum BodyPartColor
+{
+	Normal = 0, // Default skin
+	Green,
+	Red,
+	Blue,
+	White,
+};
+
+// Body part has a type, symptom, and color
+public class BodyPart
+{
+	public BodyPartType bodyPartType;
+	public Symptom symptom;
+};
 
 public class BodyController : MonoBehaviour{
   
+	/*** Overall Body ***/
 
-	/*** Symptoms ***/
+	// Body has heartbeat and an overall color
+	int heartbeat;
+	public BodyPartColor bodyColor;
 
-	// List of possible symptoms. These can be anywhere
-	enum Symptom {
+	// List of all body parts, their symptoms, and color
+	// This array is indexed via BodyPartType
+	BodyPart[] bodyParts;
 
-		// All good: default state
-		None,
+	// Parallel array that maps BodyPart to the body part GameObjects
+	GameObject[] bodyPartObjects;
 
-		BloodSpurts,
-		Pain,
-		Heartbeat,
-		SkinRashes
-	};
+	/*** Private ***/
 
-    public enum BodyPart
+	public static BodyPartType GetBodyPart (string name)
     {
-        Head = 0,
-        LeftArm,
-        RightArm,
-        LeftLeg,
-        RightLeg,
-        Groin,
-        Chest,
-        None
-    };
-
-    // Parallel array that maps BodyPart to the body part GameObjects
-    GameObject[] bodyPartObjects;
-
-	// List of current symptoms on the body
-	Symptom[] bodyPartSymptoms;
-
-    public static BodyPart GetBodyPart (string name)
-    {
-        BodyPart part = BodyPart.None;
+        BodyPartType part = BodyPartType.None;
         switch (name)
         {
             case "Head":
-                part = BodyPart.Head;
+                part = BodyPartType.Head;
                 break;
             case "Left Arm":
-                part = BodyPart.LeftArm;
+                part = BodyPartType.LeftArm;
                 break;
             case "Right Arm":
-                part = BodyPart.RightArm;
+                part = BodyPartType.RightArm;
                 break;
             case "Left Leg":
-                part = BodyPart.LeftLeg;
+                part = BodyPartType.LeftLeg;
                 break;
             case "Right Leg":
-                part = BodyPart.RightLeg;
+                part = BodyPartType.RightLeg;
                 break;
             case "Groin":
-                part = BodyPart.Groin;
+                part = BodyPartType.Groin;
+                break;
+            case "Chest":
+                part = BodyPartType.Chest;
                 break;
             default:
-                part = BodyPart.None;
+                part = BodyPartType.None;
                 break;
                 
         }
@@ -86,10 +112,10 @@ public class BodyController : MonoBehaviour{
 		SetupVisuals();
 	}
 	
-    public void applyCure(ToolBox.Tool tool, BodyPart part)
+	public void applyCure(ToolBox.Tool tool, BodyPartType part)
     {
 		// We have a TOOL, a BODY part, and a SYMPTOM on this body part..
-		Symptom symptom = bodyPartSymptoms[ (int)part ];
+		Symptom symptom = bodyParts[ (int)part ].symptom;
 
 		// How many of each symptom do we have?
 		int bloodSpurtCount = CountSymptom( Symptom.BloodSpurts );
@@ -113,14 +139,14 @@ public class BodyController : MonoBehaviour{
 		style.fontSize = 10;
 
 		// For each diseasd body part, slap it on visually
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		for (int i = 0; i < bodyPartCount; i++) {
-			Symptom symptom = bodyPartSymptoms [i];
-			GameObject bodyPart = bodyPartObjects [i];
-			if (symptom != Symptom.None && bodyPart != null) {
-				Vector3 pos = Camera.main.WorldToScreenPoint ( bodyPart.transform.position );
+			BodyPart bodyPart = bodyParts [i];
+			GameObject bodyPartObject = bodyPartObjects [i];
+			if (bodyPart.symptom != Symptom.None && bodyPartObject != null) {
+				Vector3 pos = Camera.main.WorldToScreenPoint ( bodyPartObject.transform.position );
 				pos.y = Screen.height - pos.y;
-				GUI.Label (new Rect(pos.x - 25, pos.y, 50, 50), "Symptom: " + symptom, style );
+				GUI.Label (new Rect(pos.x - 25, pos.y, 50, 50), "Symptom: " + bodyPart.symptom, style );
 			}
 		}
 	}
@@ -138,9 +164,9 @@ public class BodyController : MonoBehaviour{
 		// I'm sure there is a lambda way of doing this
 		int count = 0;
 
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		for (int i = 0; i < bodyPartCount; i++) {
-			if (bodyPartSymptoms [i] == symptom)
+			if (bodyParts [i].symptom == symptom)
 				count++;
 		}
 
@@ -149,10 +175,26 @@ public class BodyController : MonoBehaviour{
 
 	void SetupSymptoms()
 	{
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
-		bodyPartSymptoms = new Symptom[ bodyPartCount ];
-		for( int i = 0; i < bodyPartCount; i++ )
-			bodyPartSymptoms[ i ] = Symptom.None;
+		// 50% chance that the heartbeat is abnormal
+		if (Random.Range (0, 2) == 0)
+			heartbeat = 80;
+		else
+			heartbeat = Random.Range( 60, 101 );
+
+		// 50% chance of abnormal color
+		int colorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
+		if (Random.Range (0, 2) == 0)
+			bodyColor = BodyPartColor.Normal;
+		else
+			bodyColor = (BodyPartColor)Random.Range (1, colorCount + 1);
+	
+		// Initialize body parts with no symptom
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
+		bodyParts = new BodyPart[ bodyPartCount ];
+		for (int i = 0; i < bodyPartCount; i++) {
+			bodyParts [i].bodyPartType = (BodyPartType)i;
+			bodyParts [i].symptom = Symptom.None;
+		}
 
 		// List of symptoms we randomly shuffle: we will apply these
 		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
@@ -169,26 +211,26 @@ public class BodyController : MonoBehaviour{
 		{
 			// Pick random body part. If it's not yet assigned, assign it now
 			int bodyPartIndex = Random.Range ( 0, bodyPartCount );
-			if (bodyPartSymptoms [bodyPartIndex] == Symptom.None) {
+			if (bodyParts [bodyPartIndex].symptom == Symptom.None) {
 
 				// Assign a random and unique symptom
-				bodyPartSymptoms[ bodyPartIndex ] = symptoms[ 0 ];
+				bodyParts[ bodyPartIndex ].symptom = symptoms[ 0 ];
 				symptoms.RemoveAt (0);
 				targetSymptomCount--;
 			}
 		}
 
 		// Print out for debugging
-		foreach( BodyPart bodyPart in System.Enum.GetValues(typeof(BodyPart)) )
+		foreach( BodyPart bodyPart in bodyParts )
 		{
-			Debug.Log ( "Body part " + bodyPart + " has symptom: " + bodyPartSymptoms[ (int)bodyPart ] );
+			Debug.Log ( "Body part " + bodyPart.bodyPartType + " has symptom: " + bodyPart.symptom );
 		}
 	}
 
 	void SetupVisuals()
 	{
 		// First, grab all body parts 
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
+		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		bodyPartObjects = new GameObject[ bodyPartCount ];
 
 		// Todo: not be hardcoded
@@ -203,7 +245,7 @@ public class BodyController : MonoBehaviour{
 		Material redMaterial = AssetDatabase.LoadAssetAtPath("Assets/RedMaterial.mat", typeof(Material)) as Material;
 		Material newMaterial = AssetDatabase.LoadAssetAtPath("Assets/New Material.mat", typeof(Material)) as Material;
 		for (int i = 0; i < bodyPartCount; i++) {
-			Symptom symptom = bodyPartSymptoms [i];
+			Symptom symptom = bodyParts [i].symptom;
 			if (symptom != Symptom.None) {
 				bodyPartObjects [i].GetComponent< Renderer > ().material = redMaterial;
 			} else {
