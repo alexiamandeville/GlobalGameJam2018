@@ -4,18 +4,26 @@ using UnityEngine;
 
 
 public class Clickable : MonoBehaviour {
+    public SoundController sound;
 
     // Use this for initialization
-    BodyController bod = BodyController.GetInstance();
-    ToolBox toolBox = ToolBox.GetInstance();
+    BodyController bod;
+    ToolBox toolBox;
 
     //ToolBoxController tools;
 
 
 	void Start () {
-	    //TODO: Initialize Body Controller	
+        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
+        //TODO: Initialize Body Controller	
+        bod = gameController.GetComponent(typeof(BodyController)) as BodyController;
+
         //TODO: Initialize ToolBox Controller
-	}
+        toolBox = gameController.GetComponent(typeof(ToolBox)) as ToolBox;
+        //Initializing Sound Engine
+        sound = gameController.GetComponent(typeof(SoundController)) as SoundController;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -32,6 +40,7 @@ public class Clickable : MonoBehaviour {
                 //Tell the body that the current Tool has touched it
 				BodyPartType part = BodyController.GetBodyPart(name);
                 bod.applyCure(toolBox.selectedTool, part);
+                sound.playBodyEffect(toolBox.selectedTool, part);
                 break;
             case "Tool":
                 toolBox.selectTool(name);

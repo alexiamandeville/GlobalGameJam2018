@@ -45,7 +45,7 @@ public class BodyPart
 	public Symptom symptom;
 };
 
-public class BodyController{
+public class BodyController : MonoBehaviour{
   
 	/*** Overall Body ***/
 
@@ -61,15 +61,6 @@ public class BodyController{
 	GameObject[] bodyPartObjects;
 
 	/*** Private ***/
-
-    static BodyController singleton = null;
-
-    public static  BodyController GetInstance()
-    {
-        if (singleton == null)
-            singleton = new BodyController();
-        return singleton;
-    }
 
 	public static BodyPartType GetBodyPart (string name)
     {
