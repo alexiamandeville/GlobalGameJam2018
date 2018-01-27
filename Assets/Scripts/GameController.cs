@@ -127,8 +127,8 @@ public class GameController : MonoBehaviour {
             if (minutesLeft < 0) { minutesLeft = 0; }
             if (fractionsLeft < 0) { fractionsLeft = 0; }
             if (secondsLeft < 0) { secondsLeft = 0; }
-            Debug.Log(string.Format("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString("00"), fractionsLeft.ToString("00")));
-            timeText.text = string.Format("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString("00"), fractionsLeft.ToString("00"));
+            
+			timeText.text = string.Format("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString("00"), fractionsLeft.ToString("00"));
         }
     }
 

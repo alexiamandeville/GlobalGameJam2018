@@ -192,6 +192,7 @@ public class BodyController : MonoBehaviour{
 		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		bodyParts = new BodyPart[ bodyPartCount ];
 		for (int i = 0; i < bodyPartCount; i++) {
+			bodyParts [i] = new BodyPart ();
 			bodyParts [i].bodyPartType = (BodyPartType)i;
 			bodyParts [i].symptom = Symptom.None;
 		}
@@ -211,6 +212,11 @@ public class BodyController : MonoBehaviour{
 		{
 			// Pick random body part. If it's not yet assigned, assign it now
 			int bodyPartIndex = Random.Range ( 0, bodyPartCount );
+
+			// Chest not supported
+			if (bodyPartIndex == (int)BodyPartType.Chest)
+				continue;
+
 			if (bodyParts [bodyPartIndex].symptom == Symptom.None) {
 
 				// Assign a random and unique symptom
@@ -245,6 +251,11 @@ public class BodyController : MonoBehaviour{
 		Material redMaterial = AssetDatabase.LoadAssetAtPath("Assets/RedMaterial.mat", typeof(Material)) as Material;
 		Material newMaterial = AssetDatabase.LoadAssetAtPath("Assets/New Material.mat", typeof(Material)) as Material;
 		for (int i = 0; i < bodyPartCount; i++) {
+
+			// Skip the last two: Chest and None
+			if (bodyPartObjects [i] == null)
+				continue;
+
 			Symptom symptom = bodyParts [i].symptom;
 			if (symptom != Symptom.None) {
 				bodyPartObjects [i].GetComponent< Renderer > ().material = redMaterial;
