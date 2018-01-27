@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Head
+  - Chest
+  - Left Arm
+  - Right Arm
+  - Left Leg
+  - Right Leg
+  - Groin
   layers:
   - Default
   - TransparentFX
