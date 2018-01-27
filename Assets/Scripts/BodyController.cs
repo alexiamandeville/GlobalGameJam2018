@@ -23,9 +23,7 @@ public enum BodyPartType
 	RightArm,
 	LeftLeg,
 	RightLeg,
-	Groin,
-	Chest,
-	None
+	Groin
 };
 
 // Official colors
@@ -50,8 +48,8 @@ public class BodyController : MonoBehaviour{
 	/*** Overall Body ***/
 
 	// Body has heartbeat and an overall color
-	int heartbeat;
-	public BodyPartColor bodyColor;
+	int heartbeat = 80;
+	public BodyPartColor bodyColor = BodyPartColor.Normal;
 
 	// List of all body parts, their symptoms, and color
 	// This array is indexed via BodyPartType
@@ -64,7 +62,7 @@ public class BodyController : MonoBehaviour{
 
 	public static BodyPartType GetBodyPart (string name)
     {
-        BodyPartType part = BodyPartType.None;
+		BodyPartType part = BodyPartType.Head;
         switch (name)
         {
             case "Head":
@@ -85,12 +83,9 @@ public class BodyController : MonoBehaviour{
             case "Groin":
                 part = BodyPartType.Groin;
                 break;
-            case "Chest":
-                part = BodyPartType.Chest;
-                break;
-            default:
-                part = BodyPartType.None;
-                break;
+			default:
+				Debug.Log ("ERROR: This should never happen!");
+				break;
                 
         }
 
@@ -212,11 +207,6 @@ public class BodyController : MonoBehaviour{
 		{
 			// Pick random body part. If it's not yet assigned, assign it now
 			int bodyPartIndex = Random.Range ( 0, bodyPartCount );
-
-			// Chest not supported
-			if (bodyPartIndex == (int)BodyPartType.Chest)
-				continue;
-
 			if (bodyParts [bodyPartIndex].symptom == Symptom.None) {
 
 				// Assign a random and unique symptom
@@ -239,7 +229,7 @@ public class BodyController : MonoBehaviour{
 		int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
 		bodyPartObjects = new GameObject[ bodyPartCount ];
 
-		// Todo: not be hardcoded
+		// Todo: not be hardcoded! This matches the BodyPartType
 		bodyPartObjects[ 0 ] = GameObject.Find( "Head" );
 		bodyPartObjects[ 1 ] = GameObject.Find( "Left Arm" );
 		bodyPartObjects[ 2 ] = GameObject.Find( "Right Arm" );
