@@ -8,10 +8,22 @@ using UnityEngine.UI;
 // the player's life counter, and win / end state.
 public class GameController : MonoBehaviour {
 
-	/*** UI Labels ***/
+    [Header("Menus")]
+    [SerializeField]
+    private GameObject TitleScreen;
+    [SerializeField]
+    private GameObject GameFinishedScreen;
 
-	Text healthText;
-	Text timeText;
+    [Header("Game object")]
+    [SerializeField]
+    private GameObject MainGameObjs;
+
+	/*** UI Labels ***/
+    [Header("UI Labels")]
+    [SerializeField]
+	private Text healthText;
+    [SerializeField]
+	private Text timeText;
 
 	/*** Game State ***/
 
@@ -21,6 +33,8 @@ public class GameController : MonoBehaviour {
 
 	// Starting time of the game
 	float startingTime;
+
+    private bool isGameFinished = false;
 
 	// Each game starts with 3 wrong moves. On the third, game is over
 	int heartCount;
@@ -66,26 +80,21 @@ public class GameController : MonoBehaviour {
 
 	/*** Unity Methods ***/
 
-	// Use this for initialization
-	void Start () {
-
-		// Setup UI
-		healthText = GameObject.Find("HealthText").GetComponent<Text>();
-		timeText = GameObject.Find("TimeText").GetComponent<Text>();
-
-		// Setup game state
-		ResetGame();
-	}
-
 	// Update is called once per frame
 	void Update () {
 
+        if (isGameFinished)
+        {
+            return;
+        }
 		// If the patient ever has no heartCount left, game over
 		float secondsLeft = kTotalTime - (Time.time - startingTime);
-		if (heartCount <= 0 || secondsLeft <= 0.0f) {
+        if(secondsLeft < 0) { secondsLeft = 0; }
+		if ((heartCount <= 0 || secondsLeft <= 0.0f) ) {
 
 			healthText.text = "DEAD";
 			timeText.text = "00:00.00";
+            StartCoroutine(GoToGameFinishedMenu());
 		}
 		// Else not dead, keep playing
 		else
@@ -95,7 +104,11 @@ public class GameController : MonoBehaviour {
 
 			double minutesLeft = Mathf.Floor (secondsLeft / 60.0f);
 			int fractionsLeft = (int)((secondsLeft - Mathf.Floor (secondsLeft)) * 100.0f);
-			timeText.text = string.Format ("{0}:{1}.{2}", minutesLeft, ((int)secondsLeft % 60).ToString ("00"), fractionsLeft.ToString ("00"));
+            if(minutesLeft < 0) { minutesLeft = 0; }
+            if(fractionsLeft < 0) { fractionsLeft = 0;  }
+            if(secondsLeft < 0) { secondsLeft = 0;  }
+            Debug.Log(string.Format("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString("00"), fractionsLeft.ToString("00")));
+			timeText.text = string.Format ("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString ("00"), fractionsLeft.ToString ("00"));
 		}
 	}
 
@@ -112,11 +125,29 @@ public class GameController : MonoBehaviour {
 
 	public void ResetGame()
 	{
+        //Deactivate uneeded gameobjects and activate needed gameobjects
+        isGameFinished = false;
+        TitleScreen.SetActive(false);
+        MainGameObjs.SetActive(true);
 		// Initial values to restart game
 		startingTime = Time.time;
 		heartCount = kHeartCount;
 		SetupSymptoms ();
 	}
+    
+    public void ReturnToTitleMenu()
+    {
+        GameFinishedScreen.SetActive(false);
+        TitleScreen.SetActive(true);
+    }
+
+    public IEnumerator GoToGameFinishedMenu()
+    {
+        isGameFinished = true;
+        yield return new WaitForSeconds(2f);
+        MainGameObjs.SetActive(false);
+        GameFinishedScreen.SetActive(true);
+    }
 
 	/*** Internal ***/
 
