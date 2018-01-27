@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour {
 	// Game constants
 	const float kTotalTime = 10.0f;
 	const int kHeartCount = 3;
+    private SoundController sound;
 
 	// Starting time of the game
 	float startingTime;
@@ -148,6 +149,7 @@ public class GameController : MonoBehaviour {
 		// Initial values to restart game
 		startingTime = Time.time;
 		heartCount = kHeartCount;
+
 
 		// Reset body as well		
 		body.Reset ();
