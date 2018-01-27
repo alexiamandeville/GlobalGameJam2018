@@ -11,6 +11,9 @@ TagManager:
   - Left Leg
   - Right Leg
   - Groin
+  - RightButton
+  - WrongButton
+  - HealthCountLabel
   layers:
   - Default
   - TransparentFX
