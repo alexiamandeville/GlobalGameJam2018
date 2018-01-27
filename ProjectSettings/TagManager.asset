@@ -4,16 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Head
-  - Chest
-  - Left Arm
-  - Right Arm
-  - Left Leg
-  - Right Leg
-  - Groin
-  - RightButton
-  - WrongButton
-  - HealthCountLabel
+  - Tool
+  - Body
+  - Background
   layers:
   - Default
   - TransparentFX
