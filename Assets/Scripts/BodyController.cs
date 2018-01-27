@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
-public class BodyController{
+public class BodyController : MonoBehaviour{
   
 
 	/*** Symptoms ***/
@@ -39,15 +39,6 @@ public class BodyController{
 	// List of current symptoms on the body
 	Symptom[] bodyPartSymptoms;
 
-    static BodyController singleton = null;
-
-    public static  BodyController GetInstance()
-    {
-        if (singleton == null)
-            singleton = new BodyController();
-        return singleton;
-    }
-
     public static BodyPart GetBodyPart (string name)
     {
         BodyPart part = BodyPart.None;
@@ -70,9 +61,6 @@ public class BodyController{
                 break;
             case "Groin":
                 part = BodyPart.Groin;
-                break;
-            case "Chest":
-                part = BodyPart.Chest;
                 break;
             default:
                 part = BodyPart.None;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class ToolBox {
+public class ToolBox : MonoBehaviour {
     public enum Tool
     {
         Injector,
@@ -18,16 +18,6 @@ public class ToolBox {
         Red,
         Green,
         Blue
-    }
-    static ToolBox singleton = null;
-
-    public static ToolBox GetInstance()
-    {
-        if (singleton == null)
-        {
-            singleton = new ToolBox();
-        }
-        return singleton;
     }
 
 
@@ -53,6 +43,7 @@ public class ToolBox {
                 selectedTool = Tool.None;
                 break;
         }
+        
     }
 	
 	// Update is called once per frame
