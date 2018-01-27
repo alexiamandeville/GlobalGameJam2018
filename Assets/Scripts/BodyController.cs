@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 /*** Body Enum Types ***/
@@ -62,6 +63,9 @@ public class BodyController : MonoBehaviour
 
     // Parallel array that maps BodyPartColor to materials
     Material[] bodyPartColorMaterials;
+
+    [SerializeField]
+    private Text HeartRateText;
 
     public static BodyPartType GetBodyPart(string name)
     {
@@ -165,6 +169,8 @@ public class BodyController : MonoBehaviour
             heartbeat = 80;
         else
             heartbeat = Random.Range(60, 101);
+
+        HeartRateText.text = heartbeat.ToString() ;
 
         // 50% chance of abnormal color
         int colorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;

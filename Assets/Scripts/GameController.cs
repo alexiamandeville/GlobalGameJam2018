@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour {
 	private Text healthText;
     [SerializeField]
 	private Text timeText;
+    [SerializeField]
+    private Text heartRateText;
 
     [SerializeField]
     private Heartbeat HeartScript;
