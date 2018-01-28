@@ -139,7 +139,7 @@ public class RulesSystem {
 		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
-		rule.exactColor = BodyPartColor.Normal;
+		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 
@@ -163,7 +163,7 @@ public class RulesSystem {
 		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
-		rule.exactColor = BodyPartColor.Normal;
+		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 

@@ -26,11 +26,10 @@ public enum BodyPartType
 // Official colors
 public enum BodyPartColor
 {
-	Normal = 0, // Default skin
+	White = 0, // Default skin!
 	Green,
 	Red,
 	Blue,
-	White,
 };
 
 // Body part has a type, symptom, and color
@@ -47,7 +46,7 @@ public class BodyController : MonoBehaviour
 
     // Body has heartbeat and an overall color
     public int heartbeat = 80;
-    BodyPartColor bodyColor = BodyPartColor.Normal;
+    BodyPartColor bodyColor = BodyPartColor.White;
 
     // List of all body parts, their symptoms, and color
     // This array is indexed via BodyPartType
@@ -212,7 +211,7 @@ public class BodyController : MonoBehaviour
         // 50% chance of abnormal color
         int colorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
         if (Random.Range(0, 2) == 0)
-            bodyColor = BodyPartColor.Normal;
+            bodyColor = BodyPartColor.White;
         else
             bodyColor = (BodyPartColor)Random.Range(1, colorCount);
 
@@ -269,18 +268,15 @@ public class BodyController : MonoBehaviour
 	White,*/
         Color newColor = Color.grey ;
         switch (bodyColor)
-        {
-            case BodyPartColor.Normal:
-                newColor = new Color(.5f,.5f,.5f,1);
-                break;
+		{
+			case BodyPartColor.White:
+				newColor = new Color (.8f, .8f, .8f, .8f);
+				break;
             case BodyPartColor.Green:
                 newColor = new Color(.2f,.8f,.2f,1);
                 break;
             case BodyPartColor.Blue:
                 newColor = new Color(.2f, .2f, .8f, 1); ;
-                break;
-            case BodyPartColor.White:
-                newColor = new Color (.8f, .8f, .8f, .8f);
                 break;
             case BodyPartColor.Red:
                 newColor = new Color(.8f,.2f,.2f,1);
@@ -293,7 +289,7 @@ public class BodyController : MonoBehaviour
         }
         if (enabled)
         {
-            bodyMesh.GetComponent<Renderer>().material.color = newColor;
+            //bodyMesh.GetComponent<Renderer>().material.color = newColor;
         }
 
     }
