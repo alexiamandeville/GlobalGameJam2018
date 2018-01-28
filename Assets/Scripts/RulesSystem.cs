@@ -156,42 +156,9 @@ public class RulesSystem {
 		rules.Add (rule);
 	}
 
-	// Helper function: Left and right arms match, Left and right legs match.
-	static bool BodyPartTypeEqual( BodyPartType a, BodyPartType b )
-	{
-		bool aIsArm = ( a == BodyPartType.LeftArm || a == BodyPartType.RightArm );
-		bool bIsArm = ( b == BodyPartType.LeftArm || b == BodyPartType.RightArm );
-
-		bool aIsLeg = ( a == BodyPartType.LeftLeg || a == BodyPartType.RightLeg );
-		bool bIsLeg = ( b == BodyPartType.LeftLeg || b == BodyPartType.RightLeg );
-
-		return ( a == b || ( aIsArm && bIsArm ) || ( aIsLeg && bIsLeg ) );
-	}
-
-	// Helper function: if you ask the left leg for the sympom, we also check right, etc
-	static Symptom GetBodyPartSymptom( BodyPart[] bodyParts, BodyPartType bodyPartType )
-	{
-		if (bodyPartType == BodyPartType.LeftArm || bodyPartType == BodyPartType.RightArm) {
-			Symptom symptom = bodyParts [(int)BodyPartType.LeftArm].symptom;
-			if (symptom != Symptom.None)
-				return symptom;
-			else
-				return bodyParts [(int)BodyPartType.RightArm].symptom;
-		}
-		else if (bodyPartType == BodyPartType.LeftLeg || bodyPartType == BodyPartType.RightLeg) {
-			Symptom symptom = bodyParts [(int)BodyPartType.LeftLeg].symptom;
-			if (symptom != Symptom.None)
-				return symptom;
-			else
-				return bodyParts [(int)BodyPartType.RightLeg].symptom;
-		}
-		else
-			return bodyParts[ (int)bodyPartType ].symptom;
-	}
-
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool tool, BodyPartType bodyPart, BodyPartColor bodyColor )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor )
 	{
 		// Count number of each symptom we have
 		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
@@ -227,7 +194,7 @@ public class RulesSystem {
 			else if (rule.ruleType == RuleType.ExactMatch) {
 
 				// Does the target body part have this symptom?
-				bool symptomMatches = ( rule.exactSymptom == GetBodyPartSymptom( bodyParts, rule.exactBodyPart ) );
+				bool symptomMatches = ( rule.exactSymptom == bodyParts[ (int)rule.exactBodyPart ].symptom );
 
 				bool colorMatches = true;
 				if( rule.exactColorIsSpecific )
@@ -242,7 +209,7 @@ public class RulesSystem {
 			}
 
 			// If rule applies, see if the user used the right tool. On success, update body and return true
-			if (ruleDoesApply && EvaluateRuleSolutions (rule, tool, bodyPart)) {
+			if (ruleDoesApply && EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
 				bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
 				return true;
 			}
@@ -255,13 +222,13 @@ public class RulesSystem {
 
 	// For each rule solution, see if it applies to the given params. Removes the rule
 	// solution on success, returning true. Else return false.
-	private static bool EvaluateRuleSolutions( Rule rule, ToolBox.Tool tool, BodyPartType bodyPart )
+	private static bool EvaluateRuleSolutions( Rule rule, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart )
 	{
 		for (int i = 0; i < rule.ruleSolutions.Count; i++) {
 			RuleSolution ruleSolution = rule.ruleSolutions[ i ];
 
-			if (ruleSolution.tool == tool) {
-				bool isValidBodyPart = BodyPartTypeEqual(ruleSolution.bodyPart, bodyPart);
+			if (ruleSolution.tool == playersTool) {
+				bool isValidBodyPart = ( ruleSolution.bodyPart == playersTargetBodyPart );
 				if ( ( ruleSolution.isBodyPartSpecific == false ) ||
 					 ( ruleSolution.isBodyPartSpecific && isValidBodyPart ) ) {
 					rule.ruleSolutions.RemoveAt (i);

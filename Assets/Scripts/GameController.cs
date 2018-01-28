@@ -80,6 +80,7 @@ public class GameController : MonoBehaviour {
 		else if( body.IsFullyHealed() )
 		{
 			// TODO: WIN WIN WIN!
+			Debug.Log( "Winning!" );
 		}
         // Else not dead, keep playing
         else
