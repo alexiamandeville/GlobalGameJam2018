@@ -62,7 +62,7 @@ public class BodyController : MonoBehaviour
     private GameObject[] bodyPartObjects;
 
     // Parallel array that maps BodyPartColor to materials
-    Material[] bodyPartColorMaterials;
+    public Material[] bodyPartColorMaterials;
 
     [SerializeField]
     private Text HeartRateText;
@@ -99,6 +99,19 @@ public class BodyController : MonoBehaviour
         return part;
     }
 
+	// Returns true if the patient is fully healed (no more symptoms!)
+	public bool IsFullyHealed()
+	{
+		foreach( BodyPart bodyPart in bodyParts )
+		{
+			// We still have a problem: not fully healed
+			if (bodyPart.symptom != Symptom.None)
+				return false;
+		}
+
+		// Fully healed
+		return true;
+	}
 
     /*** Private ***/
 
@@ -122,6 +135,8 @@ public class BodyController : MonoBehaviour
     {
 		// Test out the rule system
 		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part );
+
+		// TODO: Hook up audio here. Success means something good happened. False is a failure / misapplication
     }
 
     // Update is called once per frame
@@ -177,7 +192,7 @@ public class BodyController : MonoBehaviour
         if (Random.Range(0, 2) == 0)
             bodyColor = BodyPartColor.Normal;
         else
-            bodyColor = (BodyPartColor)Random.Range(1, colorCount - 1);
+            bodyColor = (BodyPartColor)Random.Range(1, colorCount);
 
         // Initialize body parts with no symptom
         int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
@@ -240,17 +255,10 @@ public class BodyController : MonoBehaviour
     {
         // For each type of color, initialize colors
         int bodyPartColorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
-        bodyPartColorMaterials = new Material[bodyPartColorCount];
-
-        bodyPartColorMaterials[0] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/NormalSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[1] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/GreenSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[2] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/RedSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[3] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/BlueSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[4] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/WhiteSkin.mat", typeof(Material)) as Material;
 
 		// For each body part, apply the appropriate color
 		foreach (GameObject child in bodyPartObjects) {
-			child.GetComponent<Renderer> ().material = bodyPartColorMaterials [(int)bodyColor];
+			child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [(int)bodyColor];
 		}
     }
 }
