@@ -53,7 +53,8 @@ public class BodyController : MonoBehaviour
     /*** Overall Body ***/
 
     // Body has heartbeat and an overall color
-    public int heartbeat = 80;
+	public const int kTargetHeartbeat = 80;
+	public int heartbeat = kTargetHeartbeat;
 
     BodyPartColor bodyColor = BodyPartColor.White;
     public BodyPainLevel painLevel = BodyPainLevel.Bad;
@@ -128,6 +129,10 @@ public class BodyController : MonoBehaviour
 		if (bodyColor != BodyPartColor.White)
 			return false;
         
+		// Is the heartbeat cured?
+		if (heartbeat != kTargetHeartbeat)
+			return false;
+
 		// Graphics change
 		painLevel = BodyPainLevel.Cured;
 
@@ -170,7 +175,7 @@ public class BodyController : MonoBehaviour
 
 		// Test out the rule system
 		bool fixesColor = false;
-		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, heartbeat, out fixesColor );
+		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, ref heartbeat, out fixesColor );
 
 		// Did color get fixed?
 		if (fixesColor) {
@@ -192,7 +197,10 @@ public class BodyController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+	{
+		if( HeartRateText != null )
+			HeartRateText.text = heartbeat.ToString() ;
+
         if (bodyMesh != null)
         {
             //Set the current pain level
@@ -259,12 +267,10 @@ public class BodyController : MonoBehaviour
         painLevel = BodyPainLevel.Bad;
         // 50% chance that the heartbeat is abnormal
         if (Random.Range(0, 2) == 0)
-            heartbeat = 80;
+			heartbeat = kTargetHeartbeat;
         else
-            heartbeat = Random.Range(60, 101);
-
-        HeartRateText.text = heartbeat.ToString() ;
-
+            heartbeat = Random.Range(85, 121);
+		
         // 50% chance of abnormal color
         int colorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
         if (Random.Range(0, 2) == 0)

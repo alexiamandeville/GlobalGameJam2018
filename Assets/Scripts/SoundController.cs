@@ -130,8 +130,6 @@ public class SoundController : MonoBehaviour {
         playEffect(toolPickup);
     }
 
-
-
 	// Use this for initialization
 	void Start () {
         GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");

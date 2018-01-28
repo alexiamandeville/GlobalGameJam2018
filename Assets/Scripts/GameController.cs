@@ -23,6 +23,24 @@ public class GameController : MonoBehaviour {
     public GameObject finishText;
     public GameObject finishImage;
 
+    private string[] winStrings =
+    {
+        "All those weeks of Medical school have paid off!",
+        "Your parents are super proud of you!",
+        "Mommy Wow! I'm. A. Doctor. Now!",
+        "We are very impressed!",
+        "You have received 30xp."
+    };
+
+    private string[] loseStrings =
+    {
+    
+        "How could you?",
+        "We worked so hard on this just for you to fail.",
+        "Well, they were probably a jerk anyway.",
+        "This patient had a family to support."
+    };
+
     [Header("Game object")]
     [SerializeField]
     private GameObject MainGameObjs;
@@ -152,13 +170,15 @@ public class GameController : MonoBehaviour {
         if (didIWin)
         {
             sound.playBGM(SoundController.Music.WinningTheme);
-            finishText.GetComponent<Text>().text = "Wow, your patient lived!  You are an incredible Doctor!";
+            int randomIndex = Random.Range(0, winStrings.Length);
+            finishText.GetComponent<Text>().text = "Wow, your patient lived! "  + winStrings[randomIndex];
             finishImage.GetComponent<Image>().sprite = finishFaces[1];
         }
         else
         {
             sound.playBGM(SoundController.Music.LosingTheme);
-            finishText.GetComponent<Text>().text = "Your patient has died.";
+            int randomIndex = Random.Range(0, loseStrings.Length);
+            finishText.GetComponent<Text>().text = "Your patient has died. " + loseStrings[randomIndex];
             finishImage.GetComponent<Image>().sprite = finishFaces[0];
         }
 
