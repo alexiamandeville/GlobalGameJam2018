@@ -66,6 +66,7 @@ public class Clickable : MonoBehaviour {
                     if (isToolSelected)
                     {
                         activeTool.transform.position = oldPoint;
+                        activeTool.GetComponent<Collider>().enabled = true;
                         activeTool = null;
                     }
                     activeTool = GameObject.Find(name) as GameObject;
