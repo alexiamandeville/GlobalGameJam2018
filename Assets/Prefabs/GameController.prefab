@@ -234,9 +234,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   bodyPartColorMaterials:
-  - {fileID: 2100000, guid: 0e66076ec63e24d27a314b1da0383a4d, type: 2}
-  - {fileID: 2100000, guid: 8acc77333a50041e781e2a729adeb8d7, type: 2}
-  - {fileID: 2100000, guid: 2e0dbb736b95848959aa8bfb3ad327e2, type: 2}
-  - {fileID: 2100000, guid: a92583b263c2541ceab41a9551836da7, type: 2}
   - {fileID: 2100000, guid: e17312ca0bbff4c7da34911d800b007e, type: 2}
+  - {fileID: 2100000, guid: a92583b263c2541ceab41a9551836da7, type: 2}
+  - {fileID: 2100000, guid: 8acc77333a50041e781e2a729adeb8d7, type: 2}
+  - {fileID: 2100000, guid: 0e66076ec63e24d27a314b1da0383a4d, type: 2}
+  - {fileID: 2100000, guid: 2e0dbb736b95848959aa8bfb3ad327e2, type: 2}
   HeartRateText: {fileID: 0}

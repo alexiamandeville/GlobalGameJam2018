@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.4371361, g: 0.48486054, b: 0.5651281, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -523,12 +523,12 @@ Prefab:
         type: 2}
       propertyPath: bodyPartColorMaterials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a92583b263c2541ceab41a9551836da7, type: 2}
+      objectReference: {fileID: 2100000, guid: e17312ca0bbff4c7da34911d800b007e, type: 2}
     - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
         type: 2}
       propertyPath: bodyPartColorMaterials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 8acc77333a50041e781e2a729adeb8d7, type: 2}
+      objectReference: {fileID: 2100000, guid: a92583b263c2541ceab41a9551836da7, type: 2}
     - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
         type: 2}
       propertyPath: bodyPartColorMaterials.Array.data[2]
