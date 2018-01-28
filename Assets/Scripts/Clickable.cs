@@ -51,7 +51,7 @@ public class Clickable : MonoBehaviour {
 
                 BodyPartType part = BodyController.GetBodyPart(name);
                 bod.applyCure(toolBox.selectedTool, part);
-                sound.playBodyEffect(toolBox.selectedTool, false);
+                
                 break;
             case "Tool":
                 ToolBox.Tool oldTool = toolBox.selectedTool;

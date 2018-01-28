@@ -77,11 +77,13 @@ public class GameController : MonoBehaviour {
         {
 
             timeText.text = "00:00.00";
+            body.setPainLevel(BodyPainLevel.Dead);
             StartCoroutine(GoToGameFinishedMenu());
         }
 		// Else, win!
 		else if( body.IsFullyHealed() )
 		{
+            body.setPainLevel(BodyPainLevel.Cured);
 			// TODO: WIN WIN WIN!
 			Debug.Log( "Winning!" );
 		}

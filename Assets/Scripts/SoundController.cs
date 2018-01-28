@@ -138,7 +138,6 @@ public class SoundController : MonoBehaviour {
         //TODO: Initialize Body Controller	
         source = camera.GetComponent(typeof(AudioSource)) as AudioSource;
 
-        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
         //musicSource = gameController.GetComponent(typeof(AudioSource)) as AudioSource;
         playBGM(Music.StartScreen);
 	}
