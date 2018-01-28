@@ -52,6 +52,7 @@ public class BodyController : MonoBehaviour
     // List of all body parts, their symptoms, and color
     // This array is indexed via BodyPartType
     BodyPart[] bodyParts;
+    GameObject bodyMesh;
 
     // Parallel array that maps BodyPart to the body part GameObjects
     [SerializeField]
@@ -117,7 +118,7 @@ public class BodyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        bodyMesh = GameObject.FindGameObjectWithTag("BodyModel");
         Reset();
 
     }
@@ -259,7 +260,41 @@ public class BodyController : MonoBehaviour
 
 		// For each body part, apply the appropriate color
 		foreach (GameObject child in bodyPartObjects) {
-			child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [(int)bodyColor];
+			//child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [(int)bodyColor];
 		}
+        /*	Normal = 0, // Default skin
+	Green,
+	Red,
+	Blue,
+	White,*/
+        Color newColor = Color.grey ;
+        switch (bodyColor)
+        {
+            case BodyPartColor.Normal:
+                newColor = new Color(.5f,.5f,.5f,1);
+                break;
+            case BodyPartColor.Green:
+                newColor = new Color(.2f,.8f,.2f,1);
+                break;
+            case BodyPartColor.Blue:
+                newColor = new Color(.2f, .2f, .8f, 1); ;
+                break;
+            case BodyPartColor.White:
+                newColor = new Color (.8f, .8f, .8f, .8f);
+                break;
+            case BodyPartColor.Red:
+                newColor = new Color(.8f,.2f,.2f,1);
+                break;
+        }
+
+        if (bodyMesh == null)
+        {
+            bodyMesh = GameObject.FindGameObjectWithTag("BodyModel");
+        }
+        if (enabled)
+        {
+            bodyMesh.GetComponent<Renderer>().material.color = newColor;
+        }
+
     }
 }
