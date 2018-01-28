@@ -177,7 +177,7 @@ public class BodyController : MonoBehaviour
         if (Random.Range(0, 2) == 0)
             bodyColor = BodyPartColor.Normal;
         else
-            bodyColor = (BodyPartColor)Random.Range(1, colorCount + 1);
+            bodyColor = (BodyPartColor)Random.Range(1, colorCount);
 
         // Initialize body parts with no symptom
         int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
@@ -243,7 +243,7 @@ public class BodyController : MonoBehaviour
 
 		// For each body part, apply the appropriate color
 		foreach (GameObject child in bodyPartObjects) {
-			child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [Random.Range(0,5)];
+			child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [(int)bodyColor];
 		}
     }
 }

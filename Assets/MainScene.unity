@@ -383,15 +383,34 @@ Prefab:
       propertyPath: HeartRateText
       value: 
       objectReference: {fileID: 789067249}
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e17312ca0bbff4c7da34911d800b007e, type: 2}
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: a92583b263c2541ceab41a9551836da7, type: 2}
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8acc77333a50041e781e2a729adeb8d7, type: 2}
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0e66076ec63e24d27a314b1da0383a4d, type: 2}
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2e0dbb736b95848959aa8bfb3ad327e2, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &383703461 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
-    type: 2}
-  m_PrefabInternal: {fileID: 383703460}
-  m_Script: {fileID: 11500000, guid: 2dd15efa3d06f4e7da1d27acb4082fea, type: 3}
 --- !u!114 &383703463 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
@@ -1282,7 +1301,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+          type: 2}
         m_MethodName: OnDebugClick
         m_Mode: 2
         m_Arguments:
@@ -2417,8 +2437,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 383703461}
-        m_MethodName: Reset
+      - m_Target: {fileID: 383703463}
+        m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
