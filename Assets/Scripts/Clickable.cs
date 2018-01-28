@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Clickable : MonoBehaviour {
     SoundController sound;
+    static GameObject activeTool;
+    static bool isToolSelected = false;
+    static Vector3 oldPoint;
 
     // Use this for initialization
     BodyController bod;
@@ -27,7 +30,14 @@ public class Clickable : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (isToolSelected)
+        {
+            //oldPoint = activeTool.transform.position;
+            Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            newPosition.y = newPosition.z;
+            newPosition.y = oldPoint.y;
+            activeTool.transform.position = newPosition;
+        }
 	} 
     // On hit, we talk to the owning parent
     void OnMouseDown() {
@@ -37,22 +47,57 @@ public class Clickable : MonoBehaviour {
         {
             //Body parts:
             case "Body":
-                //Tell the body that the current Tool has touched it
-				BodyPartType part = BodyController.GetBodyPart(name);
+                //Tell the body that the current Tool has touched it                   
+
+                BodyPartType part = BodyController.GetBodyPart(name);
                 bod.applyCure(toolBox.selectedTool, part);
                 sound.playBodyEffect(toolBox.selectedTool, false);
                 break;
             case "Tool":
+                ToolBox.Tool oldTool = toolBox.selectedTool;
                 toolBox.selectTool(name);
+                if (toolBox.selectedTool == oldTool)
+                {
+                    Debug.Log("Yes we just got the same thing.");
+                    return;
+                }
                 if (toolBox.selectedTool != ToolBox.Tool.None)
                 {
+                    if (isToolSelected)
+                    {
+                        activeTool.transform.position = oldPoint;
+                        activeTool.GetComponent<Collider>().enabled = true;
+                        activeTool = null;
+                    }
+                    activeTool = GameObject.Find(name) as GameObject;
+                    activeTool.GetComponent<Collider>().enabled = false;
+                    oldPoint = activeTool.transform.position;
                     sound.playToolPickupEffect(toolBox.selectedTool);
+                    isToolSelected = true;
+                } else
+                {
+                    if (isToolSelected)
+                    {
+                        isToolSelected = false;
+                        activeTool.transform.position = oldPoint;
+                        activeTool.GetComponent<Collider>().enabled = true;
+                        activeTool = null;
+                    }
+
                 }
                 break;
             case "Background":
+                if (isToolSelected)
+                {
+                    isToolSelected = false;
+                    activeTool.transform.position = oldPoint;
+                    activeTool.GetComponent<Collider>().enabled = true;
+                    activeTool = null;
+                }
                 toolBox.selectTool("None");
                 break;
+
         }
-		// Communicate to owning script:
-	}
+        // Communicate to owning script:
+    }
 }

@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour {
 	/*** Game State ***/
 
 	// Game constants
-	const float kTotalTime = 10.0f;
+	const float kTotalTime = 60.0f;
 	const int kHeartCount = 3;
     private SoundController sound;
 
@@ -48,49 +48,6 @@ public class GameController : MonoBehaviour {
 	// Each game starts with 3 wrong moves. On the third, game is over
 	int heartCount;
 
-	/*** Symptoms ***/
-
-
-	// Use this for initialization
-	
-
-	// List of possible symptoms. These can be anywhere
-	enum Symptom {
-
-		// All good: default state
-		None,
-
-		// Blood
-		BloodBlue,
-		BloodGreen,
-
-		// Heartbeat
-		HeartbeatFast,
-		HeartbeatSlow,
-
-		// Skin color
-		SkinColorRash,
-		SkinColorBoils,
-
-		// Pain
-		PainIntense,
-		PainNumb
-	};
-
-	// Six body parts, listed as 0-indexed enum for easier setting
-	enum BodyPart {
-
-		Head = 0,
-		LeftArm,
-		RightArm,
-		LeftLeg,
-		RightLeg,
-		Groin
-	};
-
-	// List of current symptoms on the body
-	Symptom[] bodyPartSymptoms;
-
     /*** Unity Methods ***/
 
     void Start()
@@ -100,6 +57,7 @@ public class GameController : MonoBehaviour {
         body = gameController.GetComponent(typeof(BodyController)) as BodyController;
         sound = gameController.GetComponent(typeof(SoundController)) as SoundController;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -111,13 +69,19 @@ public class GameController : MonoBehaviour {
         // If the patient ever has no heartCount left, game over
         float secondsLeft = kTotalTime - (Time.time - startingTime);
         if (secondsLeft < 0) { secondsLeft = 0; }
-        if ((heartCount <= 0 || secondsLeft <= 0.0f))
+		if ( heartCount <= 0 || secondsLeft <= 0.0f)
         {
 
             healthText.text = "DEAD";
             timeText.text = "00:00.00";
             StartCoroutine(GoToGameFinishedMenu());
         }
+		// Else, win!
+		else if( body.IsFullyHealed() )
+		{
+			// TODO: WIN WIN WIN!
+			Debug.Log( "Winning!" );
+		}
         // Else not dead, keep playing
         else
         {
@@ -133,6 +97,12 @@ public class GameController : MonoBehaviour {
 			timeText.text = string.Format("{0}:{1}.{2}", minutesLeft.ToString("00"), ((int)secondsLeft % 60).ToString("00"), fractionsLeft.ToString("00"));
         }
     }
+
+	// Called by BodyController when player fails to do the right application of medicine
+	public void FailedCureAttempt()
+	{
+		heartCount--;
+	}
 
 	public void OnDebugClick( GameObject sender )
 	{
@@ -156,11 +126,11 @@ public class GameController : MonoBehaviour {
 		startingTime = Time.time;
 		heartCount = kHeartCount;
 
+		// Reset rules system, since it is static but stateful
+		RulesSystem.Initialize();
 
 		// Reset body as well		
 		body.Reset ();
-
-		SetupSymptoms ();
 
         HeartScript.StartHeart();
 
@@ -183,44 +153,4 @@ public class GameController : MonoBehaviour {
         MainGameObjs.SetActive(false);
         GameFinishedScreen.SetActive(true);
     }
-
-	/*** Internal ***/
-
-	void SetupSymptoms()
-	{
-		int bodyPartCount = System.Enum.GetNames(typeof(BodyPart)).Length;
-		bodyPartSymptoms = new Symptom[ bodyPartCount ];
-		for( int i = 0; i < bodyPartCount; i++ )
-			bodyPartSymptoms[ i ] = Symptom.None;
-
-		// List of symptoms we randomly shuffle: we will apply these
-		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
-		List< Symptom > symptoms = new List< Symptom >();
-		for( int i = 0; i < kSymptomCount; i++ )
-			symptoms.Add( (Symptom)i );
-		symptoms.Sort((a, b)=> 1 - 2 * Random.Range(0, 1));
-
-		// 3 - 5 symptoms. Keep trying to assign to a symptom-free body part
-		int targetSymptomCount = Random.Range( 3, 5 );
-
-		// Shitty performance / approach
-		while( targetSymptomCount > 0 )
-		{
-			// Pick random body part. If it's not yet assigned, assign it now
-			int bodyPartIndex = Random.Range ( 0, bodyPartCount - 1 );
-			if (bodyPartSymptoms [bodyPartIndex] == Symptom.None) {
-
-				// Assign a random and unique symptom
-				bodyPartSymptoms[ bodyPartIndex ] = symptoms[ 0 ];
-				symptoms.RemoveAt (0);
-				targetSymptomCount--;
-			}
-		}
-
-		// Print out for debugging
-		foreach( BodyPart bodyPart in System.Enum.GetValues(typeof(BodyPart)) )
-		{
-			Debug.Log ( "Body part " + bodyPart + " has symptom: " + bodyPartSymptoms[ (int)bodyPart ] );
-		}
-	}
 }

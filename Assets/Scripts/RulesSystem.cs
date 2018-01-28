@@ -45,6 +45,7 @@ class Rule
 {
 	// Based on a rule, we re-interpret the below params..
 	public RuleType ruleType;
+	public BodyPartType fixesBodyPartType;
 
 	// ExactCount, MinCount:
 	public int count = 0;
@@ -61,8 +62,9 @@ class Rule
 	public List< RuleSolution > ruleSolutions = new List< RuleSolution >();
 
 	// Helper constructor
-	public Rule( RuleType type ) {
+	public Rule( RuleType type, BodyPartType fixedBodyPart ) {
 		ruleType = type;
+		fixesBodyPartType = fixedBodyPart;
 	}
 };
 
@@ -77,40 +79,33 @@ public class RulesSystem {
 		rules = new List< Rule >();
 		Rule rule = null;
 
-		// No blood spurts -> Administer pill
-		rule = new Rule( RuleType.ExactCount );
-		rule.count = 0;
-		rule.countSymptom = Symptom.BloodSpurts;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
-		rules.Add (rule);
-
 		// Blood from more than one area -> ointment on groin
-		rule = new Rule( RuleType.MinCount );
+		rule = new Rule( RuleType.MinCount, BodyPartType.Head );
 		rule.count = 2;
 		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
 		rules.Add (rule);
 
 		// Blood from head and green color -> Administer pills to the groin and put ointment on leg
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
 		rule.exactBodyPart = BodyPartType.Head;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Green;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill, BodyPartType.Groin ) );
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.LeftLeg ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from head -> Tourniquet on leg
 		// TODO: How do we implement an "else" rule? Meaning the above rules take precendence? Do we have rule groups?
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
 		rule.exactBodyPart = BodyPartType.Head;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.LeftLeg ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Leg ) );
 		rules.Add (rule);
 
 		// Blood from groin & skin is non-white -> Administer pill
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactBodyPart = BodyPartType.Groin;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
@@ -119,16 +114,16 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from groin  -> Tourniquet on arm
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactBodyPart = BodyPartType.Groin;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.LeftArm ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Arm ) );
 		rules.Add (rule);
 
 		// Blood from arm & skin has color -> Administer pill
-		rule = new Rule( RuleType.ExactMatch );
-		rule.exactBodyPart = BodyPartType.LeftArm;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
+		rule.exactBodyPart = BodyPartType.Arm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
 		rule.exactColor = BodyPartColor.Normal;
@@ -136,16 +131,16 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from arm -> Tourniquet on groin
-		rule = new Rule( RuleType.ExactMatch );
-		rule.exactBodyPart = BodyPartType.LeftArm;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
+		rule.exactBodyPart = BodyPartType.Arm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Groin ) );
 		rules.Add (rule);
 
 		// Blood from leg and red color -> Tourniquet head and injection to head
-		rule = new Rule( RuleType.ExactMatch );
-		rule.exactBodyPart = BodyPartType.LeftLeg;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
+		rule.exactBodyPart = BodyPartType.Leg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Red;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
@@ -153,8 +148,8 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from leg -> Tourniquet on head
-		rule = new Rule( RuleType.ExactMatch );
-		rule.exactBodyPart = BodyPartType.LeftLeg;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
+		rule.exactBodyPart = BodyPartType.Leg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
@@ -163,21 +158,88 @@ public class RulesSystem {
 
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool tool, BodyPartType bodyPart )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor )
 	{
-		// We have a TOOL, a BODY part, and a SYMPTOM on this body part..
-		Symptom symptom = bodyParts[(int)bodyPart].symptom;
+		// Count number of each symptom we have
+		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
+		int[] symptomCount = new int[ kSymptomCount ];
 
 		// How many of each symptom do we have?
-		int bloodSpurtCount = CountSymptom(bodyParts, Symptom.BloodSpurts);
-		int painCount = CountSymptom(bodyParts, Symptom.Pain);
-		int heartbeatCount = CountSymptom(bodyParts, Symptom.Heartbeat);
-		int skinRashesCount = CountSymptom(bodyParts, Symptom.SkinRashes);
+		for( int i = 1; i < kSymptomCount; i++ )
+			symptomCount[ i ] = CountSymptom(bodyParts, (Symptom)i);
+		
+		// For each rule, see which is applicable!
+		foreach (Rule rule in rules) {
+			bool ruleDoesApply = false;
 
-		// Todo..
+			// ExactCount: Rule is applied if there is exactly X number of the given symptom across the body. Can be zero.
+			if (rule.ruleType == RuleType.ExactCount) {
+
+				if (symptomCount [(int)rule.countSymptom] == rule.count) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// MinCount: Rule is applied if there is exactly X or more number of the given symptom across the body.
+			else if (rule.ruleType == RuleType.MinCount) {
+
+				if (symptomCount [(int)rule.countSymptom] >= rule.count) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// ExactMatch: Rule is applied if the matching pattern (color, body part, symptom) i.
+			else if (rule.ruleType == RuleType.ExactMatch) {
+
+				// Does the target body part have this symptom?
+				bool symptomMatches = ( rule.exactSymptom == bodyParts[ (int)rule.exactBodyPart ].symptom );
+
+				bool colorMatches = true;
+				if( rule.exactColorIsSpecific )
+					colorMatches = ( rule.exactColor == bodyColor );
+				else if( rule.exactColorNegate )
+					colorMatches = ( rule.exactColor != bodyColor );
+
+				if ( symptomMatches && colorMatches ) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// If rule applies, see if the user used the right tool. On success, update body and return true
+			if (ruleDoesApply && EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
+				bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
+				return true;
+			}
+
+		}
+
+		// No success..
 		return false;
 	}
 
+	// For each rule solution, see if it applies to the given params. Removes the rule
+	// solution on success, returning true. Else return false.
+	private static bool EvaluateRuleSolutions( Rule rule, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart )
+	{
+		for (int i = 0; i < rule.ruleSolutions.Count; i++) {
+			RuleSolution ruleSolution = rule.ruleSolutions[ i ];
+
+			if (ruleSolution.tool == playersTool) {
+				bool isValidBodyPart = ( ruleSolution.bodyPart == playersTargetBodyPart );
+				if ( ( ruleSolution.isBodyPartSpecific == false ) ||
+					 ( ruleSolution.isBodyPartSpecific && isValidBodyPart ) ) {
+					rule.ruleSolutions.RemoveAt (i);
+					return true;
+				}
+			}
+		}
+
+		// Never matched
+		return false;
+	}
 
 	// Helper function: returns the number of body parts that have the given symptom
 	static int CountSymptom( BodyPart[] bodyParts, Symptom symptom )
