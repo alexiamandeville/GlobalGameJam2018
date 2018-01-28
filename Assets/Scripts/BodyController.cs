@@ -123,7 +123,14 @@ public class BodyController : MonoBehaviour
 			if (bodyPart.symptom != Symptom.None)
 				return false;
 		}
-        painLevel = BodyPainLevel.Cured;
+
+		// Is the skin color non-white?
+		if (bodyColor != BodyPartColor.White)
+			return false;
+        
+		// Graphics change
+		painLevel = BodyPainLevel.Cured;
+
 		// Fully healed
 		return true;
 	}
@@ -162,8 +169,14 @@ public class BodyController : MonoBehaviour
 			return;
 
 		// Test out the rule system
-		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, heartbeat );
+		bool fixesColor = false;
+		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, heartbeat, out fixesColor );
 
+		// Did color get fixed?
+		if (fixesColor) {
+			bodyColor = BodyPartColor.White;
+			SetupColor ();
+		}
        
 		// Tell game controller if we did this wrong
 		if (!success)
@@ -305,36 +318,40 @@ public class BodyController : MonoBehaviour
 		foreach (GameObject child in bodyPartObjects) {
 			//child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [(int)bodyColor];
 		}
-        /*	Normal = 0, // Default skin
+
+		SetupColor ();
+    }
+
+	void SetupColor()
+	{
+
+		/*	Normal = 0, // Default skin
 	Green,
 	Red,
 	Blue,
 	White,*/
-        Color newColor = Color.grey ;
-        switch (bodyColor)
-		{
-			case BodyPartColor.White:
-				newColor = new Color (.8f, .8f, .8f, .8f);
-				break;
-            case BodyPartColor.Green:
-                newColor = new Color(.2f,.8f,.2f,1);
-                break;
-            case BodyPartColor.Blue:
-                newColor = new Color(.2f, .2f, .8f, 1); ;
-                break;
-            case BodyPartColor.Red:
-                newColor = new Color(.8f,.2f,.2f,1);
-                break;
-        }
+		Color newColor = Color.grey;
+		switch (bodyColor) {
+		case BodyPartColor.White:
+			newColor = new Color (.8f, .8f, .8f, .8f);
+			break;
+		case BodyPartColor.Green:
+			newColor = new Color (.2f, .8f, .2f, 1);
+			break;
+		case BodyPartColor.Blue:
+			newColor = new Color (.2f, .2f, .8f, 1);
+			;
+			break;
+		case BodyPartColor.Red:
+			newColor = new Color (.8f, .2f, .2f, 1);
+			break;
+		}
 
-        if (bodyMesh == null)
-        {
-            bodyMesh = GameObject.FindGameObjectWithTag("BodyModel");
-        }
-        if (bodyMesh != null)
-        {
-            bodyMesh.GetComponent<Renderer>().material.color = newColor;
-        }
-
-    }
+		if (bodyMesh == null) {
+			bodyMesh = GameObject.FindGameObjectWithTag ("BodyModel");
+		}
+		if (bodyMesh != null) {
+			bodyMesh.GetComponent<Renderer> ().material.color = newColor;
+		}
+	}
 }
