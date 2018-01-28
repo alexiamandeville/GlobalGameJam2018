@@ -66,15 +66,21 @@ class Rule
 	// Rules can have one or more requirements to fulfill
 	public List< RuleSolution > ruleSolutions = new List< RuleSolution >();
 
+	// ID for debugging
+	public static int IDCounter = 0;
+	public int ID = 0;
+
 	// Helper constructor
 	public Rule( RuleType type, BodyPartType fixedBodyPart ) {
 		ruleType = type;
 		fixesBodyPartType = fixedBodyPart;
+		ID = IDCounter++;
 	}
 
 	// Color match doesn't need this stuff
 	public Rule( RuleType type ) {
 		ruleType = type;
+		ID = IDCounter++;
 	}
 };
 
@@ -88,6 +94,7 @@ public class RulesSystem {
 		// Build our list of rules..
 		rules = new List< Rule >();
 		Rule rule = null;
+		Rule.IDCounter = 0;
 
 		// Rules come from: https://docs.google.com/document/d/1_UhgbOGdm4a65ZjJpK3v32FN13OfTvGpUeiiQGWP5Us/edit
 
@@ -277,6 +284,10 @@ public class RulesSystem {
 
 			// MinCount: Checks if there is 1 number of Y sumptom on fixesBodyPartType and at least X (inclusive) number overall.
 			else if (rule.ruleType == RuleType.MinCount) {
+
+				// DEBUGGING LEG PAIN:
+				if (rule.ID == 13)
+					Debug.Log ("test");
 
 				if (symptomCount [(int)rule.countSymptom] >= rule.count && bodyParts [(int)rule.fixesBodyPartType].symptom == rule.countSymptom) {
 					ruleDoesApply = true;
