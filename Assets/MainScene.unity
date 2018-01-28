@@ -2965,6 +2965,7 @@ GameObject:
   - component: {fileID: 1629147582}
   - component: {fileID: 1629147581}
   - component: {fileID: 1629147585}
+  - component: {fileID: 1629147586}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3115,6 +3116,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!111 &1629147586
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1629147580}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: d7aff5b42cc404573a7aad2b84c62491, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: d7aff5b42cc404573a7aad2b84c62491, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1708228419
 GameObject:
   m_ObjectHideFlags: 0
@@ -4201,7 +4217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2093293440
 Transform:
   m_ObjectHideFlags: 0
