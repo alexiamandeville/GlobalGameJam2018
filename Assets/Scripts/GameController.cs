@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 // This is the high level state manager for the game. It controls the setup of the body,
 // the player's life counter, and win / end state.
 public class GameController : MonoBehaviour {
@@ -17,6 +16,8 @@ public class GameController : MonoBehaviour {
     private GameObject TitleScreen;
     [SerializeField]
 	private GameObject GameFinishedScreen;
+    public Sprite deadHeartSprite;
+    public Sprite heartSprite;
 
 	public GameObject GameFinishedPanel;
     public Sprite[] finishFaces;
@@ -126,8 +127,7 @@ public class GameController : MonoBehaviour {
 		heartCount--;
 
 		// Disable this heart now..
-		Sprite deadHeart = UnityEditor.AssetDatabase.LoadAssetAtPath( "Assets/UI/T_noHeart.png", typeof( Sprite ) ) as Sprite;
-		GameHearts [2 - heartCount].GetComponent< Image >().sprite = deadHeart;
+		GameHearts [2 - heartCount].GetComponent< Image >().sprite = deadHeartSprite;
 	}
 
 	public void ResetGame()
@@ -144,7 +144,7 @@ public class GameController : MonoBehaviour {
 		// Reset texture
 		Sprite deadHeart = UnityEditor.AssetDatabase.LoadAssetAtPath( "Assets/UI/T_heart.png", typeof( Sprite ) ) as Sprite;
 		for( int i = 0; i < 3; i++ )
-			GameHearts [ i ].GetComponent< Image >().sprite = deadHeart;
+			GameHearts [ i ].GetComponent< Image >().sprite = heartSprite;
 
 		// Reset rules system, since it is static but stateful
 		RulesSystem.Initialize();
