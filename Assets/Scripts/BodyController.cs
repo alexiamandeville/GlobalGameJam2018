@@ -254,7 +254,7 @@ public class BodyController : MonoBehaviour
         }
 
     }
-	/*
+
     void OnGUI()
     {
 
@@ -286,7 +286,7 @@ public class BodyController : MonoBehaviour
             {
                 Vector3 pos = Camera.main.WorldToScreenPoint(bodyPartObject.transform.position);
                 pos.y = Screen.height - pos.y;
-                GUI.Label(new Rect(pos.x - 25, pos.y, 50, 50), "Symptom: " + bodyPart.symptom, style);
+                //GUI.Label(new Rect(pos.x - 25, pos.y, 50, 50), "Symptom: " + bodyPart.symptom, style);
 
                 if (bodyPart.symptom == Symptom.BloodSpurts)
                 {
@@ -306,7 +306,7 @@ public class BodyController : MonoBehaviour
             }
         }
     }
-*/
+	
     void OnMouseDown()
     {
         //Debug.Log("The parent was clicked!");
