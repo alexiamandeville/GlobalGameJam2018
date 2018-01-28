@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour {
 	/*** Game State ***/
 
 	// Game constants
-	const float kTotalTime = 120.0f;
+	const float kTotalTime = 60.0f;
 	const int kHeartCount = 3;
     private SoundController sound;
 
