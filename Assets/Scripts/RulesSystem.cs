@@ -285,10 +285,6 @@ public class RulesSystem {
 			// MinCount: Checks if there is 1 number of Y sumptom on fixesBodyPartType and at least X (inclusive) number overall.
 			else if (rule.ruleType == RuleType.MinCount) {
 
-				// DEBUGGING LEG PAIN:
-				if (rule.ID == 13)
-					Debug.Log ("test");
-
 				if (symptomCount [(int)rule.countSymptom] >= rule.count && bodyParts [(int)rule.fixesBodyPartType].symptom == rule.countSymptom) {
 					ruleDoesApply = true;
 				}

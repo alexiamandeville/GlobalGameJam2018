@@ -22,10 +22,12 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     private GameObject MainGameObjs;
 
+	// Game hearts
+	public GameObject[] GameHearts;
+
 	/*** UI Labels ***/
     [Header("UI Labels")]
-    [SerializeField]
-	private Text healthText;
+
     [SerializeField]
 	private Text timeText;
     [SerializeField]
@@ -72,7 +74,6 @@ public class GameController : MonoBehaviour {
 		if ( heartCount <= 0 || secondsLeft <= 0.0f)
         {
 
-            healthText.text = "DEAD";
             timeText.text = "00:00.00";
             StartCoroutine(GoToGameFinishedMenu());
         }
@@ -85,9 +86,6 @@ public class GameController : MonoBehaviour {
         // Else not dead, keep playing
         else
         {
-            // Update health
-            healthText.text = "heartCount left: " + heartCount;
-
             double minutesLeft = Mathf.Floor(secondsLeft / 60.0f);
             int fractionsLeft = (int)((secondsLeft - Mathf.Floor(secondsLeft)) * 100.0f);
             if (minutesLeft < 0) { minutesLeft = 0; }
@@ -102,17 +100,10 @@ public class GameController : MonoBehaviour {
 	public void FailedCureAttempt()
 	{
 		heartCount--;
-	}
 
-	public void OnDebugClick( GameObject sender )
-	{
-		if (sender.tag.CompareTo ("RightButton") == 0) {
-			// Do nothing yet..
-		} else if (sender.tag.CompareTo ("WrongButton") == 0) {
-
-			// Patient loses a heart
-			heartCount--;
-		}
+		// Disable this heart now..
+		Sprite deadHeart = UnityEditor.AssetDatabase.LoadAssetAtPath( "Assets/UI/T_noHeart.png", typeof( Sprite ) ) as Sprite;
+		GameHearts [2 - heartCount].GetComponent< Image >().sprite = deadHeart;
 	}
 
 	public void ResetGame()
@@ -125,6 +116,11 @@ public class GameController : MonoBehaviour {
 		// Initial values to restart game
 		startingTime = Time.time;
 		heartCount = kHeartCount;
+
+		// Reset texture
+		Sprite deadHeart = UnityEditor.AssetDatabase.LoadAssetAtPath( "Assets/UI/T_heart.png", typeof( Sprite ) ) as Sprite;
+		for( int i = 0; i < 3; i++ )
+			GameHearts [ i ].GetComponent< Image >().sprite = deadHeart;
 
 		// Reset rules system, since it is static but stateful
 		RulesSystem.Initialize();
