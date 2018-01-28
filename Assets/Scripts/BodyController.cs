@@ -38,6 +38,7 @@ public class BodyPart
 	public BodyPartType bodyPartType;
 	public Symptom symptom;
     public GameObject BloodSpurt;
+    public GameObject PainEffect;
 };
 
 public enum BodyPainLevel
@@ -81,8 +82,12 @@ public class BodyController : MonoBehaviour
     [SerializeField]
     private Text HeartRateText;
 
+    [Header("Effect Prefabs")]
     [SerializeField]
     private GameObject BloodSpurtPrefab;
+    [SerializeField]
+    private GameObject PainEffectPrefab;
+
 
     public static BodyPartType GetBodyPart(string name)
     {
@@ -164,6 +169,12 @@ public class BodyController : MonoBehaviour
             Destroy(blood);
         }
 
+        GameObject[] OldPainEffects = GameObject.FindGameObjectsWithTag("Pain");
+        foreach (GameObject pain in OldPainEffects)
+        {
+            Destroy(pain);
+        }
+
         // When a body is placed down, we setup its symptoms and visuals
         SetupSymptoms();
         SetupVisuals();
@@ -183,6 +194,10 @@ public class BodyController : MonoBehaviour
                 if (part.BloodSpurt != null)
                 {
                     Destroy(part.BloodSpurt, 2f);
+                }
+                else if(part.PainEffect != null)
+                {
+                    Destroy(part.PainEffect, 2f);
                 }
             }
         }
@@ -278,6 +293,13 @@ public class BodyController : MonoBehaviour
                     if(bodyPart.BloodSpurt == null)
                     {
                         bodyPart.BloodSpurt = GameObject.Instantiate(BloodSpurtPrefab, new Vector3(bodyPartObject.transform.position.x, bodyPartObject.transform.position.y + 20, bodyPartObject.transform.position.z), Quaternion.identity);
+                    }
+                }
+                else if (bodyPart.symptom == Symptom.Pain)
+                {
+                    if(bodyPart.PainEffect == null)
+                    {
+                        bodyPart.PainEffect = GameObject.Instantiate(PainEffectPrefab, new Vector3(bodyPartObject.transform.position.x, bodyPartObject.transform.position.y + 3, bodyPartObject.transform.position.z), Quaternion.Euler(90, 0, 0));
                     }
                 }
               
