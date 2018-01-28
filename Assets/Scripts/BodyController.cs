@@ -62,7 +62,7 @@ public class BodyController : MonoBehaviour
     private GameObject[] bodyPartObjects;
 
     // Parallel array that maps BodyPartColor to materials
-    Material[] bodyPartColorMaterials;
+    public Material[] bodyPartColorMaterials;
 
     [SerializeField]
     private Text HeartRateText;
@@ -240,17 +240,10 @@ public class BodyController : MonoBehaviour
     {
         // For each type of color, initialize colors
         int bodyPartColorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
-        bodyPartColorMaterials = new Material[bodyPartColorCount];
-
-        bodyPartColorMaterials[0] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/NormalSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[1] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/GreenSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[2] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/RedSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[3] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/BlueSkin.mat", typeof(Material)) as Material;
-        bodyPartColorMaterials[4] = AssetDatabase.LoadAssetAtPath("Assets/Meshes/Materials/WhiteSkin.mat", typeof(Material)) as Material;
 
 		// For each body part, apply the appropriate color
 		foreach (GameObject child in bodyPartObjects) {
-			child.GetComponent<Renderer> ().material = bodyPartColorMaterials [(int)bodyColor];
+			child.GetComponent<MeshRenderer> ().material = bodyPartColorMaterials [Random.Range(0,5)];
 		}
     }
 }

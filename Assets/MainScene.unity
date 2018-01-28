@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.5748171, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -286,6 +286,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: bodyPartColorMaterials.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4065058302416958, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -381,6 +386,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &383703461 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
+    type: 2}
+  m_PrefabInternal: {fileID: 383703460}
+  m_Script: {fileID: 11500000, guid: 2dd15efa3d06f4e7da1d27acb4082fea, type: 3}
 --- !u!114 &383703463 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
@@ -2406,8 +2417,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: ResetGame
+      - m_Target: {fileID: 383703461}
+        m_MethodName: Reset
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
