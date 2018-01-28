@@ -624,6 +624,11 @@ Prefab:
       propertyPath: bodyReactionGood.Array.data[4]
       value: 
       objectReference: {fileID: 8300000, guid: 2abc16b8a2e994143acb18c7f3c120b4, type: 3}
+    - target: {fileID: 82318141572510620, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0
