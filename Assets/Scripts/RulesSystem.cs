@@ -92,7 +92,7 @@ public class RulesSystem {
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Green;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill, BodyPartType.Groin ) );
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.LeftLeg ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from head -> Tourniquet on leg
@@ -101,7 +101,7 @@ public class RulesSystem {
 		rule.exactBodyPart = BodyPartType.Head;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.LeftLeg ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Leg ) );
 		rules.Add (rule);
 
 		// Blood from groin & skin is non-white -> Administer pill
@@ -118,12 +118,12 @@ public class RulesSystem {
 		rule.exactBodyPart = BodyPartType.Groin;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.LeftArm ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Arm ) );
 		rules.Add (rule);
 
 		// Blood from arm & skin has color -> Administer pill
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftArm );
-		rule.exactBodyPart = BodyPartType.LeftArm;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
+		rule.exactBodyPart = BodyPartType.Arm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
 		rule.exactColor = BodyPartColor.Normal;
@@ -131,16 +131,16 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from arm -> Tourniquet on groin
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftArm );
-		rule.exactBodyPart = BodyPartType.LeftArm;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
+		rule.exactBodyPart = BodyPartType.Arm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Groin ) );
 		rules.Add (rule);
 
 		// Blood from leg and red color -> Tourniquet head and injection to head
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftLeg );
-		rule.exactBodyPart = BodyPartType.LeftLeg;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
+		rule.exactBodyPart = BodyPartType.Leg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Red;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
@@ -148,8 +148,8 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from leg -> Tourniquet on head
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftLeg );
-		rule.exactBodyPart = BodyPartType.LeftLeg;
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
+		rule.exactBodyPart = BodyPartType.Leg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );

@@ -20,10 +20,8 @@ public enum Symptom
 public enum BodyPartType
 {
 	Head = 0,
-	LeftArm,
-	RightArm,
-	LeftLeg,
-	RightLeg,
+	Arm,
+	Leg,
 	Groin
 };
 
@@ -76,16 +74,16 @@ public class BodyController : MonoBehaviour
                 part = BodyPartType.Head;
                 break;
             case "Left Arm":
-                part = BodyPartType.LeftArm;
+                part = BodyPartType.Arm;
                 break;
             case "Right Arm":
-                part = BodyPartType.RightArm;
+                part = BodyPartType.Arm;
                 break;
             case "Left Leg":
-                part = BodyPartType.LeftLeg;
+                part = BodyPartType.Leg;
                 break;
             case "Right Leg":
-                part = BodyPartType.RightLeg;
+                part = BodyPartType.Leg;
                 break;
             case "Groin":
                 part = BodyPartType.Groin;
@@ -222,12 +220,12 @@ public class BodyController : MonoBehaviour
         int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
         List<Symptom> symptoms = new List<Symptom>();
         for (int i = 0; i < kSymptomCount; i++)
-			symptoms.Add(Symptom.BloodSpurts); // DO NOT COMMIT
+			symptoms.Add(Symptom.BloodSpurts); // WARNING TODO WARNING: This should be (Symptom)i, but is changed for debugging
         symptoms.Sort((a, b) => 1 - 2 * Random.Range(0, 1));
 
 		// Always do three symptoms, and track once the leg or arm has been
 		// set so we don't re-apply it to the opposite leg / arm
-        int targetSymptomCount = 1; // DO NOT COMMIT
+		int targetSymptomCount = 1; // WARNING TODO WARNING: This should be 3, but is changed for debugging
 		bool armsApplied = false;
 		bool legsApplied = false;
 
@@ -239,10 +237,10 @@ public class BodyController : MonoBehaviour
             if (bodyParts[bodyPartIndex].symptom == Symptom.None)
             {
 				// Don't double apply..
-				if (armsApplied && (bodyPartIndex == (int)BodyPartType.LeftArm || bodyPartIndex == (int)BodyPartType.RightArm))
+				if (armsApplied && (bodyPartIndex == (int)BodyPartType.Arm || bodyPartIndex == (int)BodyPartType.Arm))
 					continue;
 
-				if (legsApplied && (bodyPartIndex == (int)BodyPartType.LeftLeg || bodyPartIndex == (int)BodyPartType.RightLeg))
+				if (legsApplied && (bodyPartIndex == (int)BodyPartType.Leg || bodyPartIndex == (int)BodyPartType.Leg))
 					continue;
 
                 // Assign a random and unique symptom
@@ -250,10 +248,10 @@ public class BodyController : MonoBehaviour
                 symptoms.RemoveAt(0);
                 targetSymptomCount--;
 
-				if ( bodyPartIndex == (int)BodyPartType.LeftArm || bodyPartIndex == (int)BodyPartType.RightArm )
+				if ( bodyPartIndex == (int)BodyPartType.Arm || bodyPartIndex == (int)BodyPartType.Arm )
 					armsApplied = true;
 
-				if ( bodyPartIndex == (int)BodyPartType.LeftLeg || bodyPartIndex == (int)BodyPartType.RightLeg )
+				if ( bodyPartIndex == (int)BodyPartType.Leg || bodyPartIndex == (int)BodyPartType.Leg )
 					legsApplied = true;
             }
         }
