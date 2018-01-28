@@ -40,10 +40,14 @@ public class SoundController : MonoBehaviour {
         GameLose
     }
 
-    private void playEffect (AudioClip clip)
+    private void playEffect (AudioClip[] clip)
     {
         if (!muteEffects)
-            source.PlayOneShot(clip);
+        {
+            int randomIndex = Random.Range(0, clip.Length);
+            source.PlayOneShot(clip[randomIndex]);
+        }
+            
     }
 
     public void playEvent(Event e)
@@ -64,8 +68,7 @@ public class SoundController : MonoBehaviour {
                 eventClip = gameLose;
                 break;
         }
-        int randomIndex = Random.Range(0, eventClip.Length - 1);
-        playEffect(eventClip[randomIndex]);
+        playEffect(eventClip);
     }
 
     public void playBGM(Music music)
@@ -85,15 +88,37 @@ public class SoundController : MonoBehaviour {
     public void playBodyEffect( ToolBox.Tool tool, bool correctTreatment)
     {
         Debug.Log("Playing sound effect for touching body using tool: " + tool);
-        int randomEffect = Random.Range(0, pillApply.Length - 1);
-        playEffect(pillApply[0]);
-        AudioClip bodyNoise;
+
+        AudioClip[] toolNoise;
+
+        switch (tool)
+        {
+            case ToolBox.Tool.Injector:
+                toolNoise = injectorApply;
+                break;
+            case ToolBox.Tool.Ointment:
+                toolNoise = ointmentApply;
+                break;
+            case ToolBox.Tool.Tourniquet:
+                toolNoise = tourniquetApply;
+                break;
+            case ToolBox.Tool.Pill:
+                toolNoise = pillApply;
+                break;
+            default:
+                toolNoise = pillApply;
+                break;
+        }
+
+        playEffect(toolNoise);
+
+        AudioClip[] bodyNoise;
         if (correctTreatment)
         {
-            bodyNoise = bodyReactionBad[0];
+            bodyNoise = bodyReactionGood;
         } else
         {
-            bodyNoise = bodyReactionGood[0];
+            bodyNoise = bodyReactionBad;
         }
         playEffect(bodyNoise);
 
@@ -102,7 +127,7 @@ public class SoundController : MonoBehaviour {
     public void playToolPickupEffect(ToolBox.Tool tool)
     {
         Debug.Log("Playing Sound effect for tool: " + tool);
-        playEffect(toolPickup[Random.Range(0, toolPickup.Length - 1)]);
+        playEffect(toolPickup);
     }
 
 
