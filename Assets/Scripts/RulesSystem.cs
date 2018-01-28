@@ -276,7 +276,7 @@ public class RulesSystem {
 
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor, int bodyHeartbeat, out bool fixesColor )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor, ref int bodyHeartbeat, out bool fixesColor )
 	{
 		fixesColor = false;
 		// Count number of each symptom we have
@@ -362,9 +362,16 @@ public class RulesSystem {
 
 				// Did it succeed? If so we're done!
 				if (EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
+					
 					bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
 					fixesColor = ( rule.fixesColor && rule.ruleSolutions.Count <= 0 ); // Color is fixed if all requirements met
+
+					// Hack: if it's a heart rule that passes, we assume heartrate is fixed
+					if (rule.ruleType == RuleType.Heartbeat)
+						bodyHeartbeat = BodyController.kTargetHeartbeat;
+
 					return true;
+
 				// No, so we can't apply any other rules in this group
 				} else {
 					groupDidFail = true;
