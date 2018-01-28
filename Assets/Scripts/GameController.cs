@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour {
 
     private string[] loseStrings =
     {
-    
+        
         "How could you?",
         "We worked so hard on this just for you to fail.",
         "Well, they were probably a jerk anyway.",
