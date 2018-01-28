@@ -787,6 +787,18 @@ Prefab:
       propertyPath: finishImage
       value: 
       objectReference: {fileID: 743823214}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: deadHeartSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4dfdf4c3bd8599e4499c655e445a315e,
+        type: 3}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: heartSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7ceebb87e9f38ba4c8cc76982a85a0d0,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0
