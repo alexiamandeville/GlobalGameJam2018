@@ -239,7 +239,7 @@ public class BodyController : MonoBehaviour
         }
 
     }
-
+	/*
     void OnGUI()
     {
 
@@ -284,7 +284,7 @@ public class BodyController : MonoBehaviour
             }
         }
     }
-
+*/
     void OnMouseDown()
     {
         //Debug.Log("The parent was clicked!");
