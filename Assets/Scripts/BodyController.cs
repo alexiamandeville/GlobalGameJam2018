@@ -144,6 +144,13 @@ public class BodyController : MonoBehaviour
 		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor );
 
 		// TODO: Hook up audio here. Success means something good happened. False is a failure / misapplication
+
+		// Tell game controller if we did this wrong
+		if (success == false) {
+			GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+			GameController gameController = gameControllerObject.GetComponent (typeof(GameController)) as GameController;
+			gameController.FailedCureAttempt();
+		}
     }
 
     // Update is called once per frame
@@ -215,12 +222,12 @@ public class BodyController : MonoBehaviour
         int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
         List<Symptom> symptoms = new List<Symptom>();
         for (int i = 0; i < kSymptomCount; i++)
-            symptoms.Add((Symptom)i);
+			symptoms.Add(Symptom.BloodSpurts); // DO NOT COMMIT
         symptoms.Sort((a, b) => 1 - 2 * Random.Range(0, 1));
 
 		// Always do three symptoms, and track once the leg or arm has been
 		// set so we don't re-apply it to the opposite leg / arm
-        int targetSymptomCount = 3;
+        int targetSymptomCount = 1; // DO NOT COMMIT
 		bool armsApplied = false;
 		bool legsApplied = false;
 

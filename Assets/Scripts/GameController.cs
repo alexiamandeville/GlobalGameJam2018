@@ -97,6 +97,12 @@ public class GameController : MonoBehaviour {
         }
     }
 
+	// Called by BodyController when player fails to do the right application of medicine
+	public void FailedCureAttempt()
+	{
+		heartCount--;
+	}
+
 	public void OnDebugClick( GameObject sender )
 	{
 		if (sender.tag.CompareTo ("RightButton") == 0) {
