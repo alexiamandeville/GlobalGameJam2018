@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
-
 /*** Body Enum Types ***/
 
 // List of possible symptoms. These can be anywhere, but only one per body part
@@ -279,7 +277,7 @@ public class BodyController : MonoBehaviour
                     {
                         bodyPart.BloodSpurt = GameObject.Instantiate(BloodSpurtPrefab, new Vector3(bodyPartObject.transform.position.x, bodyPartObject.transform.position.y + 20, bodyPartObject.transform.position.z), Quaternion.identity);
                     }
-                }
+                } 
               
             }
         }
