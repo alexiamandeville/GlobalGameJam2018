@@ -189,6 +189,9 @@ MonoBehaviour:
   TitleScreen: {fileID: 0}
   GameFinishedScreen: {fileID: 0}
   GameFinishedPanel: {fileID: 0}
+  finishFaces: []
+  finishText: {fileID: 0}
+  finishImage: {fileID: 0}
   MainGameObjs: {fileID: 0}
   GameHearts:
   - {fileID: 0}
@@ -259,4 +262,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 2e0dbb736b95848959aa8bfb3ad327e2, type: 2}
   HeartRateText: {fileID: 0}
   BloodSpurtPrefab: {fileID: 1671372603505646, guid: a97284a3351f3054c9e931d847d843c8,
+    type: 2}
+  PainEffectPrefab: {fileID: 1489187859677082, guid: bf482cf71f39fef49ab6095f03cbb900,
     type: 2}
