@@ -16,7 +16,9 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     private GameObject TitleScreen;
     [SerializeField]
-    private GameObject GameFinishedScreen;
+	private GameObject GameFinishedScreen;
+
+	public GameObject GameFinishedPanel;
 
     [Header("Game object")]
     [SerializeField]
@@ -144,9 +146,16 @@ public class GameController : MonoBehaviour {
     {
         sound.playBGM(SoundController.Music.LosingTheme);
         isGameFinished = true;
-        HeartScript.StopHeart();
-        yield return new WaitForSeconds(2f);
-        MainGameObjs.SetActive(false);
-        GameFinishedScreen.SetActive(true);
+		HeartScript.StopHeart();
+		GameFinishedScreen.SetActive(true);
+		//MainGameObjs.SetActive(false);
+
+		Image image = GameFinishedPanel.GetComponent < Image >();
+		image.canvasRenderer.SetAlpha (0.0f);
+		image.CrossFadeAlpha (1.0f, 1.0f, false);
+
+		// TODO: Zoom in on dead face
+
+		return null;
     }
 }
