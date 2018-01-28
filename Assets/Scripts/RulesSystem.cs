@@ -362,9 +362,21 @@ public class RulesSystem {
 
 				// Did it succeed? If so we're done!
 				if (EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
-					
-					bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
+
+					BodyPart fixedBodyPart = bodyParts [(int)rule.fixesBodyPartType];
+
+					fixedBodyPart.symptom = Symptom.None;
 					fixesColor = ( rule.fixesColor && rule.ruleSolutions.Count <= 0 ); // Color is fixed if all requirements met
+
+					if (fixedBodyPart.BloodSpurt != null) {
+						Object.Destroy ( fixedBodyPart.BloodSpurt );
+						fixedBodyPart.BloodSpurt = null;
+					}
+
+					if (fixedBodyPart.PainEffect != null) {
+						Object.Destroy ( fixedBodyPart.PainEffect );
+						fixedBodyPart.PainEffect = null;
+					}
 
 					// Hack: if it's a heart rule that passes, we assume heartrate is fixed
 					if (rule.ruleType == RuleType.Heartbeat)
