@@ -438,6 +438,11 @@ Prefab:
       propertyPath: GameHearts.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: finishFaces.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 114537466871442200, guid: a48ebbb5cda585e43b33b40c773d6e43,
         type: 2}
       propertyPath: bodyTextures.Array.size
@@ -760,6 +765,28 @@ Prefab:
       propertyPath: injectorApply.Array.data[1]
       value: 
       objectReference: {fileID: 8300000, guid: eab8fd552cebd004c9c698395fdbeaab, type: 3}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: finishFaces.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4ec649bd3a3cea54798a9d1bf5d5ff00,
+        type: 3}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: finishFaces.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 677260ee53d66ae428409b96b47b5951,
+        type: 3}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: finishText
+      value: 
+      objectReference: {fileID: 1887347932}
+    - target: {fileID: 114328194946331982, guid: a48ebbb5cda585e43b33b40c773d6e43,
+        type: 2}
+      propertyPath: finishImage
+      value: 
+      objectReference: {fileID: 743823214}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a48ebbb5cda585e43b33b40c773d6e43, type: 2}
   m_IsPrefabParent: 0

@@ -19,6 +19,9 @@ public class GameController : MonoBehaviour {
 	private GameObject GameFinishedScreen;
 
 	public GameObject GameFinishedPanel;
+    public Sprite[] finishFaces;
+    public GameObject finishText;
+    public GameObject finishImage;
 
     [Header("Game object")]
     [SerializeField]
@@ -76,12 +79,13 @@ public class GameController : MonoBehaviour {
 
             timeText.text = "00:00.00";
             body.setPainLevel(BodyPainLevel.Dead);
-            GoToGameFinishedMenu();
+            GoToGameFinishedMenu(false);
         }
 		// Else, win!
 		else if( body.IsFullyHealed() )
 		{
             body.setPainLevel(BodyPainLevel.Cured);
+            GoToGameFinishedMenu(true);
 			// TODO: WIN WIN WIN!
 			//Debug.Log( "Winning!" );
 		}
@@ -142,12 +146,27 @@ public class GameController : MonoBehaviour {
         TitleScreen.SetActive(true);
     }
 
-    public void GoToGameFinishedMenu()
+    public void GoToGameFinishedMenu(bool didIWin)
     {
-        sound.playBGM(SoundController.Music.LosingTheme);
+        //Setup win/lose screen.
+        if (didIWin)
+        {
+            sound.playBGM(SoundController.Music.WinningTheme);
+            finishText.GetComponent<Text>().text = "Wow, your patient lived!  You are an incredible Doctor!";
+            finishImage.GetComponent<Image>().sprite = finishFaces[1];
+        }
+        else
+        {
+            sound.playBGM(SoundController.Music.LosingTheme);
+            finishText.GetComponent<Text>().text = "Your patient has died.";
+            finishImage.GetComponent<Image>().sprite = finishFaces[0];
+        }
+
+
         isGameFinished = true;
 		HeartScript.StopHeart();
 		GameFinishedScreen.SetActive(true);
+
 		//MainGameObjs.SetActive(false);
 
 		Image image = GameFinishedPanel.GetComponent < Image >();

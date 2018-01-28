@@ -10,6 +10,8 @@ TagManager:
   - WrongButton
   - RightButton
   - BodyModel
+  - FinishText
+  - FinishImage
   layers:
   - Default
   - TransparentFX
