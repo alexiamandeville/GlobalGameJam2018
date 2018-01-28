@@ -42,6 +42,14 @@ public class BodyPart
 	public Symptom symptom;
 };
 
+public enum BodyPainLevel
+{
+    Bad = 0,
+    Worse,
+    Dead,
+    Cured
+}
+
 public class BodyController : MonoBehaviour
 {
 
@@ -50,11 +58,18 @@ public class BodyController : MonoBehaviour
     // Body has heartbeat and an overall color
     public int heartbeat = 80;
     BodyPartColor bodyColor = BodyPartColor.Normal;
-
+    public BodyPainLevel painLevel = BodyPainLevel.Bad;
+    public Texture[] bodyTextures;
     // List of all body parts, their symptoms, and color
     // This array is indexed via BodyPartType
     BodyPart[] bodyParts;
     GameObject bodyMesh;
+    float ouchTime = 1.5f;
+    float lastOuch;
+    SoundController sound;
+
+    
+
 
     // Parallel array that maps BodyPart to the body part GameObjects
     [SerializeField]
@@ -110,7 +125,7 @@ public class BodyController : MonoBehaviour
 			if (bodyPart.symptom != Symptom.None)
 				return false;
 		}
-
+        painLevel = BodyPainLevel.Cured;
 		// Fully healed
 		return true;
 	}
@@ -120,17 +135,28 @@ public class BodyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
+        sound = gameController.GetComponent(typeof(SoundController)) as SoundController;
         bodyMesh = GameObject.FindGameObjectWithTag("BodyModel");
         Reset();
 
     }
 
+    private bool gameRunning = false;
     public void Reset()
     {
 
         // When a body is placed down, we setup its symptoms and visuals
         SetupSymptoms();
         SetupVisuals();
+        gameRunning = true;
+    }
+
+    public void setPainLevel(BodyPainLevel pain)
+    {
+        if (pain == BodyPainLevel.Worse)
+            lastOuch = Time.time;
+        painLevel = pain;
     }
 
     public void applyCure(ToolBox.Tool tool, BodyPartType part)
@@ -142,19 +168,36 @@ public class BodyController : MonoBehaviour
 		// Test out the rule system
 		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, heartbeat );
 
-		// TODO: Hook up audio here. Success means something good happened. False is a failure / misapplication
-
+       
 		// Tell game controller if we did this wrong
-		if (success == false) {
+		if (!success)
+        { 
 			GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 			GameController gameController = gameControllerObject.GetComponent (typeof(GameController)) as GameController;
 			gameController.FailedCureAttempt();
+            painLevel = BodyPainLevel.Worse;
+            lastOuch = Time.time;
 		}
+        sound.playBodyEffect(tool, success);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (bodyMesh != null)
+        {
+            //Set the current pain level
+            if (painLevel == BodyPainLevel.Worse)
+            {
+                if (Time.time - lastOuch > ouchTime)
+                {
+                    painLevel = BodyPainLevel.Bad;
+                }
+            }
+            Texture newTexture = bodyTextures[(int)painLevel];
+            bodyMesh.GetComponent<Renderer>().material.mainTexture = newTexture;
+        }
+
     }
 
     void OnGUI()
@@ -192,6 +235,8 @@ public class BodyController : MonoBehaviour
 
     void SetupSymptoms()
     {
+        //Re-set the pain level:
+        painLevel = BodyPainLevel.Bad;
         // 50% chance that the heartbeat is abnormal
         if (Random.Range(0, 2) == 0)
             heartbeat = 80;
@@ -302,7 +347,7 @@ public class BodyController : MonoBehaviour
         {
             bodyMesh = GameObject.FindGameObjectWithTag("BodyModel");
         }
-        if (enabled)
+        if (bodyMesh != null)
         {
             bodyMesh.GetComponent<Renderer>().material.color = newColor;
         }
