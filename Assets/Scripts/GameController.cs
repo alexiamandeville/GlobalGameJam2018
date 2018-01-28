@@ -69,13 +69,18 @@ public class GameController : MonoBehaviour {
         // If the patient ever has no heartCount left, game over
         float secondsLeft = kTotalTime - (Time.time - startingTime);
         if (secondsLeft < 0) { secondsLeft = 0; }
-        if ((heartCount <= 0 || secondsLeft <= 0.0f))
+		if ( heartCount <= 0 || secondsLeft <= 0.0f)
         {
 
             healthText.text = "DEAD";
             timeText.text = "00:00.00";
             StartCoroutine(GoToGameFinishedMenu());
         }
+		// Else, win!
+		else if( body.IsFullyHealed() )
+		{
+			// TODO: WIN WIN WIN!
+		}
         // Else not dead, keep playing
         else
         {
