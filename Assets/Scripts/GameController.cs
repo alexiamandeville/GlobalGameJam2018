@@ -32,8 +32,6 @@ public class GameController : MonoBehaviour {
 
     [SerializeField]
 	private Text timeText;
-    [SerializeField]
-    private Text heartRateText;
 
     [SerializeField]
     private Heartbeat HeartScript;
@@ -78,7 +76,7 @@ public class GameController : MonoBehaviour {
 
             timeText.text = "00:00.00";
             body.setPainLevel(BodyPainLevel.Dead);
-            StartCoroutine(GoToGameFinishedMenu());
+            GoToGameFinishedMenu();
         }
 		// Else, win!
 		else if( body.IsFullyHealed() )
@@ -144,7 +142,7 @@ public class GameController : MonoBehaviour {
         TitleScreen.SetActive(true);
     }
 
-    public IEnumerator GoToGameFinishedMenu()
+    public void GoToGameFinishedMenu()
     {
         sound.playBGM(SoundController.Music.LosingTheme);
         isGameFinished = true;
@@ -156,8 +154,6 @@ public class GameController : MonoBehaviour {
 		image.canvasRenderer.SetAlpha (0.0f);
 		image.CrossFadeAlpha (1.0f, 1.0f, false);
 
-		// TODO: Zoom in on dead face
-
-		return null;
+		// TODO: Zoom in on dead face	
     }
 }
