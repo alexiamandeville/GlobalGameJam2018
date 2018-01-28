@@ -73,7 +73,7 @@ public class SoundController : MonoBehaviour {
 
     public void playBGM(Music music)
     {
-        Debug.Log("Plaing Background music " + music);
+        //Debug.Log("Plaing Background music " + music);
         musicPlaying = true;
         source.clip = bgm[(int)music];
         source.Play();
@@ -87,7 +87,7 @@ public class SoundController : MonoBehaviour {
 
     public void playBodyEffect( ToolBox.Tool tool, bool correctTreatment)
     {
-        Debug.Log("Playing sound effect for touching body using tool: " + tool);
+        //Debug.Log("Playing sound effect for touching body using tool: " + tool);
 
         AudioClip[] toolNoise;
 
@@ -126,7 +126,7 @@ public class SoundController : MonoBehaviour {
 
     public void playToolPickupEffect(ToolBox.Tool tool)
     {
-        Debug.Log("Playing Sound effect for tool: " + tool);
+        //Debug.Log("Playing Sound effect for tool: " + tool);
         playEffect(toolPickup);
     }
 

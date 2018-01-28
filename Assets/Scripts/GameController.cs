@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour {
 		{
             body.setPainLevel(BodyPainLevel.Cured);
 			// TODO: WIN WIN WIN!
-			Debug.Log( "Winning!" );
+			//Debug.Log( "Winning!" );
 		}
         // Else not dead, keep playing
         else
