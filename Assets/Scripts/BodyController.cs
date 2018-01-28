@@ -139,7 +139,7 @@ public class BodyController : MonoBehaviour
 			return;
 
 		// Test out the rule system
-		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor );
+		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor, heartbeat );
 
 		// TODO: Hook up audio here. Success means something good happened. False is a failure / misapplication
 
@@ -220,12 +220,12 @@ public class BodyController : MonoBehaviour
         int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
         List<Symptom> symptoms = new List<Symptom>();
         for (int i = 0; i < kSymptomCount; i++)
-			symptoms.Add(Symptom.BloodSpurts); // WARNING TODO WARNING: This should be (Symptom)i, but is changed for debugging
+			symptoms.Add((Symptom)i);
         symptoms.Sort((a, b) => 1 - 2 * Random.Range(0, 1));
 
 		// Always do three symptoms, and track once the leg or arm has been
 		// set so we don't re-apply it to the opposite leg / arm
-		int targetSymptomCount = 1; // WARNING TODO WARNING: This should be 3, but is changed for debugging
+		int targetSymptomCount = 3;
 		bool armsApplied = false;
 		bool legsApplied = false;
 

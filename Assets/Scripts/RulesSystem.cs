@@ -30,9 +30,11 @@ class RuleSolution
 
 enum RuleType
 {
-	ExactCount,			// Rule is applied if there is exactly X number of the given symptom across the body. Can be zero.
-	MinCount,			// Rule is applied if there is exactly X or more number of the given symptom across the body.
-	ExactMatch,			// Rule is applied if the matching pattern (color, body part, symptom) is matched.
+	ExactCount,			// Checks if there is X number of Y symptoms on fixesBodyPartType.
+	MinCount,			// Checks if there is 1 number of Y sumptom on fixesBodyPartType and at least X (inclusive) number overall.
+	ExactMatch,			// Checks if there is an exact full match of symptom, body part, and color.
+	ColorMatch,			// Check if there is a color match. Simple.
+	Heartbeat,			// Check if heartbeat is below or above.
 };
 
 
@@ -51,12 +53,15 @@ class Rule
 	public int count = 0;
 	public Symptom countSymptom;
 
-	// ExactMatch:
-	public BodyPartType exactBodyPart;
+	// ExactMatch, ColorMatch:
 	public Symptom exactSymptom;
 	public bool exactColorIsSpecific = true;
 	public bool exactColorNegate = false; // Apply negation (if white, then any other color is accepted)
 	public BodyPartColor exactColor;
+
+	// Heartbeat:
+	public int heartbeatValue = 0;
+	public bool heartbeatGreater = false;
 
 	// Rules can have one or more requirements to fulfill
 	public List< RuleSolution > ruleSolutions = new List< RuleSolution >();
@@ -65,6 +70,11 @@ class Rule
 	public Rule( RuleType type, BodyPartType fixedBodyPart ) {
 		ruleType = type;
 		fixesBodyPartType = fixedBodyPart;
+	}
+
+	// Color match doesn't need this stuff
+	public Rule( RuleType type ) {
+		ruleType = type;
 	}
 };
 
@@ -79,86 +89,169 @@ public class RulesSystem {
 		rules = new List< Rule >();
 		Rule rule = null;
 
-		// Blood from more than one area -> ointment on groin
+		// Rules come from: https://docs.google.com/document/d/1_UhgbOGdm4a65ZjJpK3v32FN13OfTvGpUeiiQGWP5Us/edit
+
+		/*** 1. Blood Spurts ***/
+
+		// Head:
+
+		// If blood spurts from the head (and only here), then use the tourniquet on leg.
+		rule = new Rule( RuleType.ExactCount, BodyPartType.Head );
+		rule.count = 1;
+		rule.countSymptom = Symptom.BloodSpurts;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Leg ) );
+		rules.Add (rule);
+
+		// If blood spurts from the head, and another area, then apply the ointment on groin.
 		rule = new Rule( RuleType.MinCount, BodyPartType.Head );
 		rule.count = 2;
 		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
 		rules.Add (rule);
 
-		// Blood from head and green color -> Administer pills to the groin and put ointment on leg
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
-		rule.exactBodyPart = BodyPartType.Head;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColor = BodyPartColor.Green;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill, BodyPartType.Groin ) );
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
-		rules.Add (rule);
+		// If blood spurts from the head, and the skin is a green color, then go to section 4.
+		// No rule needed: User executes section 4 rules
 
-		// Remaining conditions w/Blood from head -> Tourniquet on leg
-		// TODO: How do we implement an "else" rule? Meaning the above rules take precendence? Do we have rule groups?
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
-		rule.exactBodyPart = BodyPartType.Head;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColorIsSpecific = false;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Leg ) );
-		rules.Add (rule);
+		// Groin:
 
-		// Blood from groin & skin is non-white -> Administer pill
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
-		rule.exactBodyPart = BodyPartType.Groin;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColorNegate = true;
-		rule.exactColor = BodyPartColor.White;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
-		rules.Add (rule);
-
-		// Remaining conditions w/Blood from groin  -> Tourniquet on arm
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
-		rule.exactBodyPart = BodyPartType.Groin;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColorIsSpecific = false;
+		// If blood spurts from the groin, then use the tourniquet on arm.
+		rule = new Rule( RuleType.ExactCount, BodyPartType.Groin );
+		rule.count = 1;
+		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Arm ) );
 		rules.Add (rule);
 
-		// Blood from arm & skin has color -> Administer pill
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
-		rule.exactBodyPart = BodyPartType.Arm;
+		// If blood spurts from the groin, and another area, then apply the ointment on groin.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Groin );
+		rule.count = 2;
+		rule.countSymptom = Symptom.BloodSpurts;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
+		rules.Add (rule);
+
+		// If blood spurts from the groin, and the skin is a color, administer the pill.
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
 		rule.exactColor = BodyPartColor.Normal;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 
-		// Remaining conditions w/Blood from arm -> Tourniquet on groin
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
-		rule.exactBodyPart = BodyPartType.Arm;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColorIsSpecific = false;
+		// Arm:
+
+		// If blood spurts from the arm, then use the tourniquet on groin.
+		rule = new Rule( RuleType.ExactCount, BodyPartType.Arm );
+		rule.count = 1;
+		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Groin ) );
 		rules.Add (rule);
 
-		// Blood from leg and red color -> Tourniquet head and injection to head
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
-		rule.exactBodyPart = BodyPartType.Leg;
+		// If blood spurts from the arm, and another area, then apply the ointment on groin.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Arm );
+		rule.count = 2;
+		rule.countSymptom = Symptom.BloodSpurts;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
+		rules.Add (rule);
+
+		// If blood spurts from the arm, and the skin is a color, administer the pill.
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
 		rule.exactSymptom = Symptom.BloodSpurts;
+		rule.exactColorNegate = true;
+		rule.exactColor = BodyPartColor.Normal;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
+		rules.Add (rule);
+
+		// Leg:
+
+		// If blood spurts from the leg, then use the tourniquet on head.
+		rule = new Rule( RuleType.ExactCount, BodyPartType.Leg );
+		rule.count = 1;
+		rule.countSymptom = Symptom.BloodSpurts;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
+		rules.Add (rule);
+
+		// If blood spurts from the leg, and another area, then apply the ointment on groin.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Leg );
+		rule.count = 2;
+		rule.countSymptom = Symptom.BloodSpurts;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
+		rules.Add (rule);
+
+		// If blood spurts from the leg, and the skin is a red color, then go to section 4.
+		// No rule needed: User executes section 4 rules
+
+		/*** 2. Pain ***/
+
+		// Head:  Administer the pill.  Go to section 4.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Head );
+		rule.count = 1;
+		rule.countSymptom = Symptom.Pain;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
+		rules.Add (rule);
+
+		// Groin: Apply ointment to the leg. If heartbeat is above 80, then go to section 3. If not, then administer pill.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Groin );
+		rule.count = 1;
+		rule.countSymptom = Symptom.Pain;
+		// TODO: Heartbeat
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
+		rules.Add (rule);
+
+		// Arm: Apply ointment to the arm. If heartbeat is below 80, then go to section 4. If not, go to section 3.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Arm );
+		rule.count = 1;
+		rule.countSymptom = Symptom.Pain;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Arm ) );
+		rules.Add (rule);
+
+		// Leg: Apply ointment to the head. If blood spurts from the arm, go to section 1. If not, go to section 1.
+		rule = new Rule( RuleType.MinCount, BodyPartType.Leg );
+		rule.count = 1;
+		rule.countSymptom = Symptom.Pain;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Head ) );
+		rules.Add (rule);
+
+		/*** 3. Heartbeat ***/
+
+		// If heartbeat is above 80, then inject into the arm.
+		rule = new Rule( RuleType.Heartbeat );
+		rule.heartbeatValue = 80;
+		rule.heartbeatGreater = true;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Injector, BodyPartType.Arm ) );
+		rules.Add (rule);
+
+		/*** 4. Skin Color / Rashes ***/
+
+		// Green: Pills - groin,  Ointment - leg
+		rule = new Rule( RuleType.ColorMatch );
+		rule.exactColor = BodyPartColor.Green;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill, BodyPartType.Groin ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
+		rules.Add (rule);
+
+		// Red: Tourniquet - head,  Injection - head
+		rule = new Rule( RuleType.ColorMatch );
 		rule.exactColor = BodyPartColor.Red;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Injector, BodyPartType.Head ) );
 		rules.Add (rule);
 
-		// Remaining conditions w/Blood from leg -> Tourniquet on head
-		rule = new Rule( RuleType.ExactMatch, BodyPartType.Leg );
-		rule.exactBodyPart = BodyPartType.Leg;
-		rule.exactSymptom = Symptom.BloodSpurts;
-		rule.exactColorIsSpecific = false;
+		// Blue: Tourniquet - head,  Injection - groin
+		rule = new Rule( RuleType.ColorMatch );
+		rule.exactColor = BodyPartColor.Blue;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Injector, BodyPartType.Groin ) );
+		rules.Add (rule);
+
+		// White: Ointment - leg
+		rule = new Rule( RuleType.ColorMatch );
+		rule.exactColor = BodyPartColor.White;
+		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
 		rules.Add (rule);
 	}
 
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor, int bodyHeartbeat )
 	{
 		// Count number of each symptom we have
 		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
@@ -172,19 +265,20 @@ public class RulesSystem {
 		foreach (Rule rule in rules) {
 			bool ruleDoesApply = false;
 
-			// ExactCount: Rule is applied if there is exactly X number of the given symptom across the body. Can be zero.
+			// ExactCount: Checks if there is X number of Y symptoms on fixesBodyPartType.
 			if (rule.ruleType == RuleType.ExactCount) {
 
-				if (symptomCount [(int)rule.countSymptom] == rule.count) {
+				// Check count of this symptom, followed by if the symptom matches
+				if (symptomCount [(int)rule.countSymptom] == rule.count && bodyParts [(int)rule.fixesBodyPartType].symptom == rule.countSymptom) {
 					ruleDoesApply = true;
 				}
 
 			}
 
-			// MinCount: Rule is applied if there is exactly X or more number of the given symptom across the body.
+			// MinCount: Checks if there is 1 number of Y sumptom on fixesBodyPartType and at least X (inclusive) number overall.
 			else if (rule.ruleType == RuleType.MinCount) {
 
-				if (symptomCount [(int)rule.countSymptom] >= rule.count) {
+				if (symptomCount [(int)rule.countSymptom] >= rule.count && bodyParts [(int)rule.fixesBodyPartType].symptom == rule.countSymptom) {
 					ruleDoesApply = true;
 				}
 
@@ -194,19 +288,36 @@ public class RulesSystem {
 			else if (rule.ruleType == RuleType.ExactMatch) {
 
 				// Does the target body part have this symptom?
-				bool symptomMatches = ( rule.exactSymptom == bodyParts[ (int)rule.exactBodyPart ].symptom );
+				bool symptomMatches = (rule.exactSymptom == bodyParts [(int)rule.fixesBodyPartType].symptom);
 
 				bool colorMatches = true;
-				if( rule.exactColorIsSpecific )
-					colorMatches = ( rule.exactColor == bodyColor );
-				else if( rule.exactColorNegate )
-					colorMatches = ( rule.exactColor != bodyColor );
+				if (rule.exactColorIsSpecific)
+					colorMatches = (rule.exactColor == bodyColor);
+				else if (rule.exactColorNegate)
+					colorMatches = (rule.exactColor != bodyColor);
 
-				if ( symptomMatches && colorMatches ) {
+				if (symptomMatches && colorMatches) {
 					ruleDoesApply = true;
 				}
 
 			}
+
+			// ColorMatch: Check if there is a color match. Simple.
+			else if (rule.ruleType == RuleType.ColorMatch) {
+
+				ruleDoesApply = ( bodyColor == rule.exactColor );
+
+			}
+
+			// Heartbeat: Check if heartbeat is below or above.
+			else if (rule.ruleType == RuleType.Heartbeat) {
+
+				if( rule.heartbeatGreater == true )
+				{
+					ruleDoesApply = ( bodyHeartbeat > rule.heartbeatValue );
+				}
+			}
+
 
 			// If rule applies, see if the user used the right tool. On success, update body and return true
 			if (ruleDoesApply && EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
