@@ -35,7 +35,7 @@ public class Clickable : MonoBehaviour {
             //oldPoint = activeTool.transform.position;
             Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             newPosition.y = newPosition.z;
-            newPosition.y = oldPoint.y;
+            newPosition.y = 2;// oldPoint.y;
             activeTool.transform.position = newPosition;
         }
 	} 
