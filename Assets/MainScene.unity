@@ -820,6 +820,10 @@ Prefab:
       propertyPath: m_IgnoreNormalsForChartDetection
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f6698f224c123d64a8e25bd07e5fe500, type: 3}
+      propertyPath: m_TagString
+      value: BodyModel
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f6698f224c123d64a8e25bd07e5fe500, type: 3}
   m_IsPrefabParent: 0
@@ -1933,6 +1937,36 @@ Prefab:
     - target: {fileID: 4878507322391196, guid: 8f9e1b2b422b033439ed8cd11af530a9, type: 2}
       propertyPath: m_LocalScale.y
       value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 33776818085467948, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 33198262236964936, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 33882452393652480, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 33814151556605076, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 33576138467003758, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 33917380799207866, guid: 8f9e1b2b422b033439ed8cd11af530a9,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114647187237640740, guid: 8f9e1b2b422b033439ed8cd11af530a9, type: 2}
