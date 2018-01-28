@@ -403,7 +403,7 @@ public class BodyController : MonoBehaviour
 			;
 			break;
 		case BodyPartColor.Red:
-			newColor = new Color (.8f, .2f, .2f, 1);
+			newColor = new Color (.5f, .2f, .2f, 1);
 			break;
 		}
 
