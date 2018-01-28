@@ -333,7 +333,7 @@ public class BodyController : MonoBehaviour
         }
         if (bodyMesh != null)
         {
-            //bodyMesh.GetComponent<Renderer>().material.color = newColor;
+            bodyMesh.GetComponent<Renderer>().material.color = newColor;
         }
 
     }
