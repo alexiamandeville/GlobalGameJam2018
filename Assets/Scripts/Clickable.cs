@@ -42,7 +42,7 @@ public class Clickable : MonoBehaviour {
     // On hit, we talk to the owning parent
     void OnMouseDown() {
 
-        Debug.Log("The parent was clicked! Tag: " + tag + "Name: " + name );
+       // Debug.Log("The parent was clicked! Tag: " + tag + "Name: " + name );
         switch (tag)
         {
             //Body parts:
@@ -58,7 +58,7 @@ public class Clickable : MonoBehaviour {
                 toolBox.selectTool(name);
                 if (toolBox.selectedTool == oldTool)
                 {
-                    Debug.Log("Yes we just got the same thing.");
+                    //Debug.Log("Yes we just got the same thing.");
                     return;
                 }
                 if (toolBox.selectedTool != ToolBox.Tool.None)

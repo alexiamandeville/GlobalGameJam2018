@@ -103,7 +103,7 @@ public class BodyController : MonoBehaviour
                 part = BodyPartType.Groin;
                 break;
             default:
-                Debug.Log("ERROR: This should never happen!");
+                //Debug.Log("ERROR: This should never happen!");
                 break;
 
         }
@@ -234,7 +234,7 @@ public class BodyController : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log("The parent was clicked!");
+        //Debug.Log("The parent was clicked!");
     }
 
 
@@ -292,7 +292,7 @@ public class BodyController : MonoBehaviour
         // Print out for debugging
         foreach (BodyPart bodyPart in bodyParts)
         {
-            Debug.Log("Body part " + bodyPart.bodyPartType + " has symptom: " + bodyPart.symptom);
+           // Debug.Log("Body part " + bodyPart.bodyPartType + " has symptom: " + bodyPart.symptom);
         }
     }
 
