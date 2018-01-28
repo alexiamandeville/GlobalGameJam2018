@@ -142,7 +142,6 @@ public class GameController : MonoBehaviour {
 		heartCount = kHeartCount;
 
 		// Reset texture
-		Sprite deadHeart = UnityEditor.AssetDatabase.LoadAssetAtPath( "Assets/UI/T_heart.png", typeof( Sprite ) ) as Sprite;
 		for( int i = 0; i < 3; i++ )
 			GameHearts [ i ].GetComponent< Image >().sprite = heartSprite;
 
