@@ -37,6 +37,7 @@ public class BodyPart
 {
 	public BodyPartType bodyPartType;
 	public Symptom symptom;
+    public GameObject BloodSpurt;
 };
 
 public enum BodyPainLevel
@@ -79,6 +80,9 @@ public class BodyController : MonoBehaviour
 
     [SerializeField]
     private Text HeartRateText;
+
+    [SerializeField]
+    private GameObject BloodSpurtPrefab;
 
     public static BodyPartType GetBodyPart(string name)
     {
@@ -154,10 +158,16 @@ public class BodyController : MonoBehaviour
 
     public void Reset()
     {
+        GameObject[] OldBlood = GameObject.FindGameObjectsWithTag("Blood");
+        foreach (GameObject blood in OldBlood)
+        {
+            Destroy(blood);
+        }
 
         // When a body is placed down, we setup its symptoms and visuals
         SetupSymptoms();
         SetupVisuals();
+        
     }
 
     public void setPainLevel(BodyPainLevel pain)
@@ -165,6 +175,19 @@ public class BodyController : MonoBehaviour
         if (pain == BodyPainLevel.Worse)
             lastOuch = Time.time;
         painLevel = pain;
+
+        if (painLevel == BodyPainLevel.Dead || painLevel == BodyPainLevel.Cured)
+        {
+            foreach (BodyPart part in bodyParts)
+            {
+                if (part.BloodSpurt != null)
+                {
+                    Destroy(part.BloodSpurt, 2f);
+                }
+            }
+        }
+
+                    
     }
 
     public void applyCure(ToolBox.Tool tool, BodyPartType part)
@@ -249,6 +272,15 @@ public class BodyController : MonoBehaviour
                 Vector3 pos = Camera.main.WorldToScreenPoint(bodyPartObject.transform.position);
                 pos.y = Screen.height - pos.y;
                 GUI.Label(new Rect(pos.x - 25, pos.y, 50, 50), "Symptom: " + bodyPart.symptom, style);
+
+                if (bodyPart.symptom == Symptom.BloodSpurts)
+                {
+                    if(bodyPart.BloodSpurt == null)
+                    {
+                        bodyPart.BloodSpurt = GameObject.Instantiate(BloodSpurtPrefab, new Vector3(bodyPartObject.transform.position.x, bodyPartObject.transform.position.y + 20, bodyPartObject.transform.position.z), Quaternion.identity);
+                    }
+                }
+              
             }
         }
     }
@@ -303,7 +335,7 @@ public class BodyController : MonoBehaviour
             if (bodyParts[bodyPartIndex].symptom == Symptom.None)
             {
                 // Assign a random and unique symptom
-                bodyParts[bodyPartIndex].symptom = symptoms[0];
+                bodyParts[bodyPartIndex].symptom = symptoms[0];               
                 symptoms.RemoveAt(0);
             }
         }

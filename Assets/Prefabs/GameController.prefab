@@ -58,7 +58,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -150,9 +150,16 @@ MonoBehaviour:
   pillApply:
   - {fileID: 8300000, guid: 310560a97665a4abb83ef914655c8711, type: 3}
   ointmentApply:
-  - {fileID: 8300000, guid: 4a71d5eb62dd24fb08cbf788b39d2a0b, type: 3}
+  - {fileID: 8300000, guid: 756782459a7b146daa1ac87d9aa29b5c, type: 3}
+  - {fileID: 8300000, guid: f3c0eed9efdcc48bf8389a53cb77a070, type: 3}
+  - {fileID: 8300000, guid: d22ad98cb7d1c456ead72b7606a88bda, type: 3}
+  - {fileID: 8300000, guid: ad67020b39ecf41c4b6b1c8d2280331c, type: 3}
   bodyReactionGood:
-  - {fileID: 8300000, guid: 2fe5ebb02a9ad43bd9b96a0bd45fa0af, type: 3}
+  - {fileID: 8300000, guid: f3841d3c1f2f5432e84c7986648ed1eb, type: 3}
+  - {fileID: 8300000, guid: 5d6e2becc931f4ba19e5853fac3490bd, type: 3}
+  - {fileID: 8300000, guid: d6ebd474d41004725ad636b477644c1c, type: 3}
+  - {fileID: 8300000, guid: cc3b4f2684cc14018bb9a340359fdf1e, type: 3}
+  - {fileID: 8300000, guid: 2abc16b8a2e994143acb18c7f3c120b4, type: 3}
   bodyReactionBad:
   - {fileID: 8300000, guid: 6dc9139a5c0e844b7b07a683e532bdf8, type: 3}
   gameWin:
@@ -161,8 +168,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5e744aa7d9edb4846b941c6d49629c68, type: 3}
   gameStart: []
   bgm:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 5329827621e32d0489de0980d49ad2d9, type: 3}
+  - {fileID: 8300000, guid: a0979dd2b5f9e2b4187cd34801455d4c, type: 3}
+  - {fileID: 8300000, guid: 14978825e47a210479cb83fbcc40ab10, type: 3}
+  - {fileID: 8300000, guid: c72f08d4358b3914b9cb38ffdef77735, type: 3}
   muteEffects: 0
   muteMusic: 0
   musicPlaying: 0
@@ -179,10 +188,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TitleScreen: {fileID: 0}
   GameFinishedScreen: {fileID: 0}
+  GameFinishedPanel: {fileID: 0}
   MainGameObjs: {fileID: 0}
-  healthText: {fileID: 0}
+  GameHearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   timeText: {fileID: 0}
-  heartRateText: {fileID: 0}
   HeartScript: {fileID: 114463316182279864}
   isGameFinished: 1
 --- !u!114 &114373489924047486
@@ -226,6 +238,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heartbeat: 80
+  painLevel: 0
+  bodyTextures:
+  - {fileID: 2800000, guid: 784a9f61efb05cf4a921ed8c143981bc, type: 3}
+  - {fileID: 2800000, guid: b2b79efef5626c24d8e50c3a0f2df5ef, type: 3}
+  - {fileID: 2800000, guid: ee5b51de3b66d5d41b3dffeb27cb87c1, type: 3}
+  - {fileID: 2800000, guid: ba16e97e9b9e8ac44819e1aea24c5db4, type: 3}
   bodyPartObjects:
   - {fileID: 0}
   - {fileID: 0}
@@ -240,3 +258,5 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 0e66076ec63e24d27a314b1da0383a4d, type: 2}
   - {fileID: 2100000, guid: 2e0dbb736b95848959aa8bfb3ad327e2, type: 2}
   HeartRateText: {fileID: 0}
+  BloodSpurtPrefab: {fileID: 1671372603505646, guid: a97284a3351f3054c9e931d847d843c8,
+    type: 2}
