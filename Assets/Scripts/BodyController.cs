@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
-
 /*** Body Enum Types ***/
 
 // List of possible symptoms. These can be anywhere, but only one per body part
@@ -302,6 +300,7 @@ public class BodyController : MonoBehaviour
                         bodyPart.PainEffect = GameObject.Instantiate(PainEffectPrefab, new Vector3(bodyPartObject.transform.position.x, bodyPartObject.transform.position.y + 3, bodyPartObject.transform.position.z), Quaternion.Euler(90, 0, 0));
                     }
                 }
+                
               
             }
         }
