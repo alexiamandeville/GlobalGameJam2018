@@ -79,14 +79,6 @@ public class RulesSystem {
 		rules = new List< Rule >();
 		Rule rule = null;
 
-		// No blood spurts -> Administer pill
-		// TODO: What does this fix?
-		rule = new Rule( RuleType.ExactCount, BodyPartType.Head );
-		rule.count = 0;
-		rule.countSymptom = Symptom.BloodSpurts;
-		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
-		rules.Add (rule);
-
 		// Blood from more than one area -> ointment on groin
 		rule = new Rule( RuleType.MinCount, BodyPartType.Head );
 		rule.count = 2;
