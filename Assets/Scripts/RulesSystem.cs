@@ -48,6 +48,7 @@ class Rule
 	// Based on a rule, we re-interpret the below params..
 	public RuleType ruleType;
 	public BodyPartType fixesBodyPartType;
+	public bool fixesColor = false;
 
 	// Rules must be grouped, because there are if / else if / else blocks
 	// Groups say that if once a rule passes but it's solution doesn't work, then we stop searching
@@ -148,6 +149,7 @@ public class RulesSystem {
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
 		rule.exactColor = BodyPartColor.White;
+		rule.fixesColor = true;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 
@@ -173,6 +175,7 @@ public class RulesSystem {
 		rule.exactColorNegate = true;
 		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
+		rule.fixesColor = true;
 		rules.Add (rule);
 
 		// Leg:
@@ -241,6 +244,7 @@ public class RulesSystem {
 		rule.exactColor = BodyPartColor.Green;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill, BodyPartType.Groin ) );
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
+		rule.fixesColor = true;
 		rules.Add (rule);
 
 		// Red: Tourniquet - head,  Injection - head
@@ -248,6 +252,7 @@ public class RulesSystem {
 		rule.exactColor = BodyPartColor.Red;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Injector, BodyPartType.Head ) );
+		rule.fixesColor = true;
 		rules.Add (rule);
 
 		// Blue: Tourniquet - head,  Injection - groin
@@ -255,19 +260,23 @@ public class RulesSystem {
 		rule.exactColor = BodyPartColor.Blue;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Tourniquet, BodyPartType.Head ) );
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Injector, BodyPartType.Groin ) );
+		rule.fixesColor = true;
 		rules.Add (rule);
 
 		// White: Ointment - leg
 		rule = new Rule( 12, RuleType.ColorMatch );
 		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Leg ) );
+		rule.fixesColor = true;
 		rules.Add (rule);
 	}
 
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor, int bodyHeartbeat )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool playersTool, BodyPartType playersTargetBodyPart, BodyPartColor bodyColor, int bodyHeartbeat, out bool fixesColor )
 	{
+		fixesColor = false;
+
 		// Count number of each symptom we have
 		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
 		int[] symptomCount = new int[ kSymptomCount ];
@@ -352,6 +361,7 @@ public class RulesSystem {
 				// Did it succeed? If so we're done!
 				if (EvaluateRuleSolutions (rule, playersTool, playersTargetBodyPart)) {
 					bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
+					fixesColor = ( rule.fixesColor && rule.ruleSolutions.Count <= 0 ); // Color is fixed if all requirements met
 					return true;
 				// No, so we can't apply any other rules in this group
 				} else {
