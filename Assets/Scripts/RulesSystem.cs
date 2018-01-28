@@ -66,15 +66,21 @@ class Rule
 	// Rules can have one or more requirements to fulfill
 	public List< RuleSolution > ruleSolutions = new List< RuleSolution >();
 
+	// ID for debugging
+	public static int IDCounter = 0;
+	public int ID = 0;
+
 	// Helper constructor
 	public Rule( RuleType type, BodyPartType fixedBodyPart ) {
 		ruleType = type;
 		fixesBodyPartType = fixedBodyPart;
+		ID = IDCounter++;
 	}
 
 	// Color match doesn't need this stuff
 	public Rule( RuleType type ) {
 		ruleType = type;
+		ID = IDCounter++;
 	}
 };
 
@@ -88,6 +94,7 @@ public class RulesSystem {
 		// Build our list of rules..
 		rules = new List< Rule >();
 		Rule rule = null;
+		Rule.IDCounter = 0;
 
 		// Rules come from: https://docs.google.com/document/d/1_UhgbOGdm4a65ZjJpK3v32FN13OfTvGpUeiiQGWP5Us/edit
 
@@ -132,7 +139,7 @@ public class RulesSystem {
 		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
-		rule.exactColor = BodyPartColor.Normal;
+		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 
@@ -156,7 +163,7 @@ public class RulesSystem {
 		rule = new Rule( RuleType.ExactMatch, BodyPartType.Arm );
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
-		rule.exactColor = BodyPartColor.Normal;
+		rule.exactColor = BodyPartColor.White;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 

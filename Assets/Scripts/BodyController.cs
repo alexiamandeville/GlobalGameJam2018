@@ -11,9 +11,7 @@ public enum Symptom
 {
 	None = 0, // All good: default state
 	BloodSpurts,
-	Pain,
-	Heartbeat,
-	SkinRashes
+	Pain
 };
 
 // Full list of body parts
@@ -28,11 +26,10 @@ public enum BodyPartType
 // Official colors
 public enum BodyPartColor
 {
-	Normal = 0, // Default skin
+	White = 0, // Default skin!
 	Green,
 	Red,
 	Blue,
-	White,
 };
 
 // Body part has a type, symptom, and color
@@ -57,7 +54,8 @@ public class BodyController : MonoBehaviour
 
     // Body has heartbeat and an overall color
     public int heartbeat = 80;
-    BodyPartColor bodyColor = BodyPartColor.Normal;
+
+    BodyPartColor bodyColor = BodyPartColor.White;
     public BodyPainLevel painLevel = BodyPainLevel.Bad;
     public Texture[] bodyTextures;
     // List of all body parts, their symptoms, and color
@@ -142,14 +140,12 @@ public class BodyController : MonoBehaviour
 
     }
 
-    private bool gameRunning = false;
     public void Reset()
     {
 
         // When a body is placed down, we setup its symptoms and visuals
         SetupSymptoms();
         SetupVisuals();
-        gameRunning = true;
     }
 
     public void setPainLevel(BodyPainLevel pain)
@@ -211,11 +207,22 @@ public class BodyController : MonoBehaviour
         style.fontSize = 10;
 
         // For each diseasd body part, slap it on visually
-        int bodyPartCount = System.Enum.GetNames(typeof(BodyPartType)).Length;
-        for (int i = 0; i < bodyPartCount; i++)
+		foreach (BodyPartType bodyPartType in System.Enum.GetValues(typeof(BodyPartType)))
         {
-            BodyPart bodyPart = bodyParts[i];
-            GameObject bodyPartObject = bodyPartObjects[i];
+			BodyPart bodyPart = bodyParts[ (int)bodyPartType ];
+            
+			int i = 0;
+			if (bodyPartType == BodyPartType.Head)
+				i = 0;
+			else if (bodyPartType == BodyPartType.Arm)
+				i = 1;
+			else if (bodyPartType == BodyPartType.Leg)
+				i = 3;
+			else if (bodyPartType == BodyPartType.Groin)
+				i = 5;
+			
+			GameObject bodyPartObject = bodyPartObjects[i];
+
             if (bodyPart.symptom != Symptom.None && bodyPartObject != null)
             {
                 Vector3 pos = Camera.main.WorldToScreenPoint(bodyPartObject.transform.position);
@@ -248,7 +255,7 @@ public class BodyController : MonoBehaviour
         // 50% chance of abnormal color
         int colorCount = System.Enum.GetNames(typeof(BodyPartColor)).Length;
         if (Random.Range(0, 2) == 0)
-            bodyColor = BodyPartColor.Normal;
+            bodyColor = BodyPartColor.White;
         else
             bodyColor = (BodyPartColor)Random.Range(1, colorCount);
 
@@ -269,36 +276,16 @@ public class BodyController : MonoBehaviour
 			symptoms.Add((Symptom)i);
         symptoms.Sort((a, b) => 1 - 2 * Random.Range(0, 1));
 
-		// Always do three symptoms, and track once the leg or arm has been
-		// set so we don't re-apply it to the opposite leg / arm
-		int targetSymptomCount = 3;
-		bool armsApplied = false;
-		bool legsApplied = false;
-
         // Shitty performance / approach
-        while (targetSymptomCount > 0)
+		while (symptoms.Count > 0)
         {
             // Pick random body part. If it's not yet assigned, assign it now
             int bodyPartIndex = Random.Range(0, bodyPartCount);
             if (bodyParts[bodyPartIndex].symptom == Symptom.None)
             {
-				// Don't double apply..
-				if (armsApplied && (bodyPartIndex == (int)BodyPartType.Arm || bodyPartIndex == (int)BodyPartType.Arm))
-					continue;
-
-				if (legsApplied && (bodyPartIndex == (int)BodyPartType.Leg || bodyPartIndex == (int)BodyPartType.Leg))
-					continue;
-
                 // Assign a random and unique symptom
                 bodyParts[bodyPartIndex].symptom = symptoms[0];
                 symptoms.RemoveAt(0);
-                targetSymptomCount--;
-
-				if ( bodyPartIndex == (int)BodyPartType.Arm || bodyPartIndex == (int)BodyPartType.Arm )
-					armsApplied = true;
-
-				if ( bodyPartIndex == (int)BodyPartType.Leg || bodyPartIndex == (int)BodyPartType.Leg )
-					legsApplied = true;
             }
         }
 
@@ -325,18 +312,15 @@ public class BodyController : MonoBehaviour
 	White,*/
         Color newColor = Color.grey ;
         switch (bodyColor)
-        {
-            case BodyPartColor.Normal:
-                newColor = new Color(.5f,.5f,.5f,1);
-                break;
+		{
+			case BodyPartColor.White:
+				newColor = new Color (.8f, .8f, .8f, .8f);
+				break;
             case BodyPartColor.Green:
                 newColor = new Color(.2f,.8f,.2f,1);
                 break;
             case BodyPartColor.Blue:
                 newColor = new Color(.2f, .2f, .8f, 1); ;
-                break;
-            case BodyPartColor.White:
-                newColor = new Color (.8f, .8f, .8f, .8f);
                 break;
             case BodyPartColor.Red:
                 newColor = new Color(.8f,.2f,.2f,1);
@@ -349,7 +333,7 @@ public class BodyController : MonoBehaviour
         }
         if (bodyMesh != null)
         {
-            bodyMesh.GetComponent<Renderer>().material.color = newColor;
+            //bodyMesh.GetComponent<Renderer>().material.color = newColor;
         }
 
     }
