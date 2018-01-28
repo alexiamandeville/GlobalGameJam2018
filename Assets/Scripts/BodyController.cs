@@ -102,6 +102,9 @@ public class BodyController : MonoBehaviour
 	// Returns true if the patient is fully healed (no more symptoms!)
 	public bool IsFullyHealed()
 	{
+		if (bodyParts == null)
+			return false;
+		
 		foreach( BodyPart bodyPart in bodyParts )
 		{
 			// We still have a problem: not fully healed
@@ -133,8 +136,12 @@ public class BodyController : MonoBehaviour
 
     public void applyCure(ToolBox.Tool tool, BodyPartType part)
     {
+		// Skip if no tool set
+		if (tool == ToolBox.Tool.None)
+			return;
+
 		// Test out the rule system
-		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part );
+		bool success = RulesSystem.EvaluateCure( bodyParts, tool, part, bodyColor );
 
 		// TODO: Hook up audio here. Success means something good happened. False is a failure / misapplication
     }

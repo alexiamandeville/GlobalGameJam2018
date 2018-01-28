@@ -119,6 +119,8 @@ public class GameController : MonoBehaviour {
 		startingTime = Time.time;
 		heartCount = kHeartCount;
 
+		// Reset rules system, since it is static but stateful
+		RulesSystem.Initialize();
 
 		// Reset body as well		
 		body.Reset ();

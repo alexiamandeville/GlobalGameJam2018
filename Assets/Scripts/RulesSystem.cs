@@ -163,21 +163,97 @@ public class RulesSystem {
 
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
-	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool tool, BodyPartType bodyPart )
+	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool tool, BodyPartType bodyPart, BodyPartColor bodyColor )
 	{
-		// We have a TOOL, a BODY part, and a SYMPTOM on this body part..
+		// We have a TOOL, a BODY part, and a SYMPTOM on this body part and a BODY COLOR
 		Symptom symptom = bodyParts[(int)bodyPart].symptom;
 
-		// How many of each symptom do we have?
-		int bloodSpurtCount = CountSymptom(bodyParts, Symptom.BloodSpurts);
-		int painCount = CountSymptom(bodyParts, Symptom.Pain);
-		int heartbeatCount = CountSymptom(bodyParts, Symptom.Heartbeat);
-		int skinRashesCount = CountSymptom(bodyParts, Symptom.SkinRashes);
+		// Count number of each symptom we have
+		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
+		int[] symptomCount = new int[ kSymptomCount ];
 
-		// Todo..
+		// How many of each symptom do we have?
+		for( int i = 1; i < kSymptomCount; i++ )
+			symptomCount[ i ] = CountSymptom(bodyParts, (Symptom)i);
+		
+		// For each rule, see which is applicable!
+		foreach (Rule rule in rules) {
+			bool ruleDoesApply = false;
+
+			// ExactCount: Rule is applied if there is exactly X number of the given symptom across the body. Can be zero.
+			if (rule.ruleType == RuleType.ExactCount) {
+
+				if (symptomCount [(int)rule.countSymptom] == rule.count) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// MinCount: Rule is applied if there is exactly X or more number of the given symptom across the body.
+			else if (rule.ruleType == RuleType.MinCount) {
+
+				if (symptomCount [(int)rule.countSymptom] >= rule.count) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// ExactMatch: Rule is applied if the matching pattern (color, body part, symptom) is matched.
+			else if (rule.ruleType == RuleType.ExactMatch) {
+
+				/*
+				public BodyPartType exactBodyPart;
+				public Symptom exactSymptom;
+				public bool exactColorIsSpecific = true;
+				public bool exactColorNegate = false; // Apply negation (if white, then any other color is accepted)
+				public BodyPartColor exactColor;
+				*/
+
+				bool bodyPartMatches = ( rule.exactBodyPart == bodyPart );
+				bool symptomMatches = ( rule.exactSymptom == symptom );
+
+				bool colorMatches = true;
+				if( rule.exactColorIsSpecific )
+					colorMatches = ( rule.exactColor == bodyColor );
+				else if( rule.exactColorNegate )
+					colorMatches = ( rule.exactColor != bodyColor );
+
+				if ( bodyPartMatches && symptomMatches && colorMatches ) {
+					ruleDoesApply = true;
+				}
+
+			}
+
+			// If rule applies, see if the user used the right tool
+			if (ruleDoesApply && EvaluateRuleSolutions (rule, tool, bodyPart))
+				return true;
+
+		}
+
+		// No success..
 		return false;
 	}
 
+	// For each rule solution, see if it applies to the given params. Removes the rule
+	// solution on success, returning true. Else return false.
+	private static bool EvaluateRuleSolutions( Rule rule, ToolBox.Tool tool, BodyPartType bodyPart )
+	{
+		for (int i = 0; i < rule.ruleSolutions.Count; i++) {
+			RuleSolution ruleSolution = rule.ruleSolutions[ i ];
+
+			if (ruleSolution.tool == tool) {
+				bool isValidBodyPart = (ruleSolution.bodyPart == bodyPart);
+				if ( ( ruleSolution.isBodyPartSpecific == false ) ||
+					 ( ruleSolution.isBodyPartSpecific && isValidBodyPart ) ) {
+					rule.ruleSolutions.RemoveAt (i);
+					return true;
+				}
+			}
+		}
+
+		// Never matched
+		return false;
+	}
 
 	// Helper function: returns the number of body parts that have the given symptom
 	static int CountSymptom( BodyPart[] bodyParts, Symptom symptom )
