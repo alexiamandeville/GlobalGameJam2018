@@ -45,6 +45,7 @@ class Rule
 {
 	// Based on a rule, we re-interpret the below params..
 	public RuleType ruleType;
+	public BodyPartType fixesBodyPartType;
 
 	// ExactCount, MinCount:
 	public int count = 0;
@@ -61,8 +62,9 @@ class Rule
 	public List< RuleSolution > ruleSolutions = new List< RuleSolution >();
 
 	// Helper constructor
-	public Rule( RuleType type ) {
+	public Rule( RuleType type, BodyPartType fixedBodyPart ) {
 		ruleType = type;
+		fixesBodyPartType = fixedBodyPart;
 	}
 };
 
@@ -78,21 +80,22 @@ public class RulesSystem {
 		Rule rule = null;
 
 		// No blood spurts -> Administer pill
-		rule = new Rule( RuleType.ExactCount );
+		// TODO: What does this fix?
+		rule = new Rule( RuleType.ExactCount, BodyPartType.Head );
 		rule.count = 0;
 		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Pill ) );
 		rules.Add (rule);
 
 		// Blood from more than one area -> ointment on groin
-		rule = new Rule( RuleType.MinCount );
+		rule = new Rule( RuleType.MinCount, BodyPartType.Head );
 		rule.count = 2;
 		rule.countSymptom = Symptom.BloodSpurts;
 		rule.ruleSolutions.Add( new RuleSolution( ToolBox.Tool.Ointment, BodyPartType.Groin ) );
 		rules.Add (rule);
 
 		// Blood from head and green color -> Administer pills to the groin and put ointment on leg
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
 		rule.exactBodyPart = BodyPartType.Head;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Green;
@@ -102,7 +105,7 @@ public class RulesSystem {
 
 		// Remaining conditions w/Blood from head -> Tourniquet on leg
 		// TODO: How do we implement an "else" rule? Meaning the above rules take precendence? Do we have rule groups?
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Head );
 		rule.exactBodyPart = BodyPartType.Head;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
@@ -110,7 +113,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Blood from groin & skin is non-white -> Administer pill
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactBodyPart = BodyPartType.Groin;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
@@ -119,7 +122,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from groin  -> Tourniquet on arm
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.Groin );
 		rule.exactBodyPart = BodyPartType.Groin;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
@@ -127,7 +130,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Blood from arm & skin has color -> Administer pill
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftArm );
 		rule.exactBodyPart = BodyPartType.LeftArm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorNegate = true;
@@ -136,7 +139,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from arm -> Tourniquet on groin
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftArm );
 		rule.exactBodyPart = BodyPartType.LeftArm;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
@@ -144,7 +147,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Blood from leg and red color -> Tourniquet head and injection to head
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftLeg );
 		rule.exactBodyPart = BodyPartType.LeftLeg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColor = BodyPartColor.Red;
@@ -153,7 +156,7 @@ public class RulesSystem {
 		rules.Add (rule);
 
 		// Remaining conditions w/Blood from leg -> Tourniquet on head
-		rule = new Rule( RuleType.ExactMatch );
+		rule = new Rule( RuleType.ExactMatch, BodyPartType.LeftLeg );
 		rule.exactBodyPart = BodyPartType.LeftLeg;
 		rule.exactSymptom = Symptom.BloodSpurts;
 		rule.exactColorIsSpecific = false;
@@ -161,13 +164,43 @@ public class RulesSystem {
 		rules.Add (rule);
 	}
 
+	// Helper function: Left and right arms match, Left and right legs match.
+	static bool BodyPartTypeEqual( BodyPartType a, BodyPartType b )
+	{
+		bool aIsArm = ( a == BodyPartType.LeftArm || a == BodyPartType.RightArm );
+		bool bIsArm = ( b == BodyPartType.LeftArm || b == BodyPartType.RightArm );
+
+		bool aIsLeg = ( a == BodyPartType.LeftLeg || a == BodyPartType.RightLeg );
+		bool bIsLeg = ( b == BodyPartType.LeftLeg || b == BodyPartType.RightLeg );
+
+		return ( a == b || ( aIsArm && bIsArm ) || ( aIsLeg && bIsLeg ) );
+	}
+
+	// Helper function: if you ask the left leg for the sympom, we also check right, etc
+	static Symptom GetBodyPartSymptom( BodyPart[] bodyParts, BodyPartType bodyPartType )
+	{
+		if (bodyPartType == BodyPartType.LeftArm || bodyPartType == BodyPartType.RightArm) {
+			Symptom symptom = bodyParts [(int)BodyPartType.LeftArm].symptom;
+			if (symptom != Symptom.None)
+				return symptom;
+			else
+				return bodyParts [(int)BodyPartType.RightArm].symptom;
+		}
+		else if (bodyPartType == BodyPartType.LeftLeg || bodyPartType == BodyPartType.RightLeg) {
+			Symptom symptom = bodyParts [(int)BodyPartType.LeftLeg].symptom;
+			if (symptom != Symptom.None)
+				return symptom;
+			else
+				return bodyParts [(int)BodyPartType.RightLeg].symptom;
+		}
+		else
+			return bodyParts[ (int)bodyPartType ].symptom;
+	}
+
 	// Eval a rule: given the current body state, the tool applied and to what body part, we apply our rules
 	// Returns true if we did something right (even if the rule isn't resolved) and false on a mistake
 	public static bool EvaluateCure( BodyPart[] bodyParts, ToolBox.Tool tool, BodyPartType bodyPart, BodyPartColor bodyColor )
 	{
-		// We have a TOOL, a BODY part, and a SYMPTOM on this body part and a BODY COLOR
-		Symptom symptom = bodyParts[(int)bodyPart].symptom;
-
 		// Count number of each symptom we have
 		int kSymptomCount = System.Enum.GetNames(typeof(Symptom)).Length;
 		int[] symptomCount = new int[ kSymptomCount ];
@@ -198,19 +231,11 @@ public class RulesSystem {
 
 			}
 
-			// ExactMatch: Rule is applied if the matching pattern (color, body part, symptom) is matched.
+			// ExactMatch: Rule is applied if the matching pattern (color, body part, symptom) i.
 			else if (rule.ruleType == RuleType.ExactMatch) {
 
-				/*
-				public BodyPartType exactBodyPart;
-				public Symptom exactSymptom;
-				public bool exactColorIsSpecific = true;
-				public bool exactColorNegate = false; // Apply negation (if white, then any other color is accepted)
-				public BodyPartColor exactColor;
-				*/
-
-				bool bodyPartMatches = ( rule.exactBodyPart == bodyPart );
-				bool symptomMatches = ( rule.exactSymptom == symptom );
+				// Does the target body part have this symptom?
+				bool symptomMatches = ( rule.exactSymptom == GetBodyPartSymptom( bodyParts, rule.exactBodyPart ) );
 
 				bool colorMatches = true;
 				if( rule.exactColorIsSpecific )
@@ -218,15 +243,17 @@ public class RulesSystem {
 				else if( rule.exactColorNegate )
 					colorMatches = ( rule.exactColor != bodyColor );
 
-				if ( bodyPartMatches && symptomMatches && colorMatches ) {
+				if ( symptomMatches && colorMatches ) {
 					ruleDoesApply = true;
 				}
 
 			}
 
-			// If rule applies, see if the user used the right tool
-			if (ruleDoesApply && EvaluateRuleSolutions (rule, tool, bodyPart))
+			// If rule applies, see if the user used the right tool. On success, update body and return true
+			if (ruleDoesApply && EvaluateRuleSolutions (rule, tool, bodyPart)) {
+				bodyParts [(int)rule.fixesBodyPartType].symptom = Symptom.None;
 				return true;
+			}
 
 		}
 
@@ -242,7 +269,7 @@ public class RulesSystem {
 			RuleSolution ruleSolution = rule.ruleSolutions[ i ];
 
 			if (ruleSolution.tool == tool) {
-				bool isValidBodyPart = (ruleSolution.bodyPart == bodyPart);
+				bool isValidBodyPart = BodyPartTypeEqual(ruleSolution.bodyPart, bodyPart);
 				if ( ( ruleSolution.isBodyPartSpecific == false ) ||
 					 ( ruleSolution.isBodyPartSpecific && isValidBodyPart ) ) {
 					rule.ruleSolutions.RemoveAt (i);
