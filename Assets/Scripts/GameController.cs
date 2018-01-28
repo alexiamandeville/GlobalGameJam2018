@@ -57,6 +57,12 @@ public class GameController : MonoBehaviour {
 
     [SerializeField]
     private Heartbeat HeartScript;
+
+	/*** Camera ***/
+
+	Vector3 SavedCameraPos;
+	float SavedCameraZoom;
+
 	/*** Game State ***/
 
 	// Game constants
@@ -80,6 +86,9 @@ public class GameController : MonoBehaviour {
         //TODO: Initialize Body Controller	
         body = gameController.GetComponent(typeof(BodyController)) as BodyController;
         sound = gameController.GetComponent(typeof(SoundController)) as SoundController;
+
+		SavedCameraPos = Camera.main.transform.position;
+		SavedCameraZoom = Camera.main.orthographicSize;
     }
 
     // Update is called once per frame
@@ -132,6 +141,9 @@ public class GameController : MonoBehaviour {
 
 	public void ResetGame()
 	{
+		Camera.main.transform.position = SavedCameraPos;
+		Camera.main.orthographicSize = SavedCameraZoom;
+
         sound.stopBGM();
         //Deactivate uneeded gameobjects and activate needed gameobjects
         isGameFinished = false;
@@ -152,8 +164,6 @@ public class GameController : MonoBehaviour {
 		body.Reset ();
 
         HeartScript.StartHeart();
-
-
 	}
     
     public void ReturnToTitleMenu()
@@ -192,6 +202,10 @@ public class GameController : MonoBehaviour {
 		image.canvasRenderer.SetAlpha (0.0f);
 		image.CrossFadeAlpha (1.0f, 1.0f, false);
 
-		// TODO: Zoom in on dead face	
+		// Play animation
+		GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
+
+		Animation animation = camera.GetComponent< Animation > ();
+		animation.Play ();
     }
 }
